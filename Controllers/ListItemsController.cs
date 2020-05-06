@@ -13,7 +13,6 @@ namespace StarshipfleetsAPI.Controllers
         // GET api/<controller>
         public IEnumerable<CustomListItem> Get(string id)
         {
-            //return new string[] { "value1", "value2" };
             return _listItems;
         }
 
