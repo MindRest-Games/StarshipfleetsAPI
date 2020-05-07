@@ -103,10 +103,13 @@
   <ItemGroup>
     <Compile Include="Controllers\ListItemsController.cs" />
     <Compile Include="Controllers\PlanetController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DAL\DatabaseHelper.cs" />
     <Compile Include="DAL\PlanetDAL.cs" />
+    <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="Models\CustomListItems.cs" />
     <Compile Include="Models\Planets\PlanetTypeDetail.cs" />
+    <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
