@@ -14,7 +14,7 @@ namespace StarshipfleetsAPI.Controllers
     public class UserController : ApiController
     {
         [Route("UserLoginCall")]
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(User))]
         public IHttpActionResult UserLoginCall([FromBody]User user)
         {
@@ -30,7 +30,7 @@ namespace StarshipfleetsAPI.Controllers
 
 
         [Route("CreateLoginCall")]
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(User))]
         public IHttpActionResult CreateLoginCall([FromBody]User user)
         {

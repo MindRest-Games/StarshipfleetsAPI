@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Cors;
 using Newtonsoft.Json.Serialization;
 using Owin;
 
@@ -20,6 +21,7 @@ namespace StarshipfleetsAPI
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*") { SupportsCredentials = true });
             app.UseWebApi(config);
         }
     }

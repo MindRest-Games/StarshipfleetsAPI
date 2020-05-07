@@ -31,6 +31,7 @@ namespace StarshipfleetsAPI.DAL
                 if (sqlReader.Read())
                 {
                     TypeDetail.TypeId = sqlReader.GetInt32Nullable("TypeID");
+                    TypeDetail.TypeName = sqlReader.GetStringNullable("TypeName");
                     TypeDetail.TextureNo = sqlReader.GetInt32Nullable("TextureNo");
                     TypeDetail.Intrastructure = sqlReader.GetDecimalNullable("Intrastructure");
                     TypeDetail.Mining = sqlReader.GetDecimalNullable("Mining");

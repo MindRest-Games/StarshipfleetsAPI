@@ -8,6 +8,7 @@ namespace StarshipfleetsAPI.Models.Planets
     public class PlanetTypeDetail
     {
         public int? TypeId { get; set; }
+        public string TypeName { get; set; }
         public int? TextureNo { get; set; }
         public decimal? Intrastructure { get; set; }
         public decimal? Mining { get; set; }
