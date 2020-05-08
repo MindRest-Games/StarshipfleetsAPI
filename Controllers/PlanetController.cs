@@ -16,7 +16,7 @@ namespace StarshipfleetsAPI.Controllers
         [Route("GetPlanetTypeDetailCall/{PlanetTypeID}")]
         [HttpGet]
         [ResponseType(typeof(PlanetTypeDetail))]
-        public IHttpActionResult Get(int PlanetTypeID)
+        public IHttpActionResult GetPlanetTypeDetailCall(int PlanetTypeID)
         {
             try
             {
@@ -29,19 +29,34 @@ namespace StarshipfleetsAPI.Controllers
         }
 
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        [Route("GetGalaxy/{GalaxyID}")]
+        [HttpGet]
+        [ResponseType(typeof(PlanetTypeDetail))]
+        public IHttpActionResult GetGalaxy(int GalaxyID)
         {
+            try
+            {
+                return Ok(PlanetDAL.GetGalaxy(GalaxyID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        [Route("GetSector/{GalaxyID}/{SectorID}")]
+        [HttpGet]
+        [ResponseType(typeof(PlanetTypeDetail))]
+        public IHttpActionResult GetSector(int GalaxyID, string SectorID)
         {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            try
+            {
+                return Ok(PlanetDAL.GetGalaxy(GalaxyID, SectorID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
     }
 }

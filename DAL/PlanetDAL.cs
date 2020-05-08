@@ -43,5 +43,45 @@ namespace StarshipfleetsAPI.DAL
                 return TypeDetail;
             }
         }
+
+        public static List<GalaxyClass> GetGalaxy(int? GalaxyID, string Sector = null)
+        {
+            if (!GalaxyID.HasValue)
+            {
+                throw new ArgumentNullException("GalaxyID", $"GalaxyID cannot be null.");
+            }
+
+            List<GalaxyClass> GalaxyObj = new List<GalaxyClass>();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetGalaxy", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@Galaxy", (int)GalaxyID);
+                DBCmd.Parameters.AddWithValue("@Sector", Sector);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (sqlReader.Read())
+                {
+                    GalaxyClass gc = new GalaxyClass();
+                    gc.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                    gc.PlanetName = sqlReader.GetStringNullable("PlanetName");
+                    gc.PlanetType = sqlReader.GetInt32Nullable("PlanetType");
+                    gc.Position = sqlReader.GetInt32Nullable("Position");
+                    gc.SubPosition = sqlReader.GetInt32Nullable("SubPosition");
+                    gc.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    gc.Sector = sqlReader.GetStringNullable("Sector");
+                    gc.System = sqlReader.GetInt32Nullable("System");
+                    gc.SysPosition = sqlReader.GetInt32Nullable("SysPosition");
+                    gc.Moon = sqlReader.GetBooleanNullable("Moon");
+                    gc.Owner = sqlReader.GetInt32Nullable("Owner");
+                    GalaxyObj.Add(gc);
+                }
+                return GalaxyObj;
+            }
+        }
     }
 }
