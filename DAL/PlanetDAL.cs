@@ -34,6 +34,7 @@ namespace StarshipfleetsAPI.DAL
                     TypeDetail.TypeName = sqlReader.GetStringNullable("TypeName");
                     TypeDetail.TextureNo = sqlReader.GetInt32Nullable("TextureNo");
                     TypeDetail.Intrastructure = sqlReader.GetDecimalNullable("Intrastructure");
+                    TypeDetail.Food = sqlReader.GetDecimalNullable("Food");
                     TypeDetail.Mining = sqlReader.GetDecimalNullable("Mining");
                     TypeDetail.Research = sqlReader.GetDecimalNullable("Research");
                     TypeDetail.Energy = sqlReader.GetDecimalNullable("Energy");

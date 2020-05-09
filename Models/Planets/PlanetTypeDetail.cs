@@ -11,6 +11,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public string TypeName { get; set; }
         public int? TextureNo { get; set; }
         public decimal? Intrastructure { get; set; }
+        public decimal? Food { get; set; }
         public decimal? Mining { get; set; }
         public decimal? Research { get; set; }
         public decimal? Energy { get; set; }
