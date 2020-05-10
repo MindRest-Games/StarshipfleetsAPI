@@ -84,5 +84,42 @@ namespace StarshipfleetsAPI.DAL
                 return GalaxyObj;
             }
         }
+
+        public static GalaxyClass GetPlanet(int? PlanetID)
+        {
+            if (!PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            GalaxyClass planet = new GalaxyClass();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetPlanetDetailbyID", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                if (sqlReader.Read())
+                {
+                    planet.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                    planet.PlanetName = sqlReader.GetStringNullable("PlanetName");
+                    planet.PlanetType = sqlReader.GetInt32Nullable("PlanetType");
+                    planet.Position = sqlReader.GetInt32Nullable("Position");
+                    planet.SubPosition = sqlReader.GetInt32Nullable("SubPosition");
+                    planet.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    planet.Sector = sqlReader.GetStringNullable("Sector");
+                    planet.System = sqlReader.GetInt32Nullable("System");
+                    planet.SysPosition = sqlReader.GetInt32Nullable("SysPosition");
+                    planet.Moon = sqlReader.GetBooleanNullable("Moon");
+                    planet.Owner = sqlReader.GetInt32Nullable("Owner");
+                }
+                return planet;
+            }
+        }
     }
 }

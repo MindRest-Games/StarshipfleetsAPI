@@ -58,5 +58,21 @@ namespace StarshipfleetsAPI.Controllers
                 return InternalServerError(e);
             }
         }
+
+
+        [Route("GetPlanet/{PlanetID}")]
+        [HttpGet]
+        [ResponseType(typeof(PlanetTypeDetail))]
+        public IHttpActionResult GetPlanet(int PlanetID)
+        {
+            try
+            {
+                return Ok(PlanetDAL.GetPlanet(PlanetID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
     }
 }
