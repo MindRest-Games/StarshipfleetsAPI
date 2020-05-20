@@ -15,7 +15,8 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? Galaxy { get; set; }
         public string Sector { get; set; }
         public int? System { get; set; }
-        public int? SysPosition { get; set; }
+        public int? XSysPosition { get; set; }
+        public int? YSysPosition { get; set; }
         public bool? Moon { get; set; }
         public int? Owner { get; set; }
     }
