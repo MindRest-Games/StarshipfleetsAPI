@@ -45,7 +45,7 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
-        public static List<GalaxyClass> GetGalaxy(int? GalaxyID, string Sector = null, int? xSysPosition = null)
+        public static List<GalaxyClass> GetGalaxy(int? GalaxyID, string Sector = null, int? System = null)
         {
             if (!GalaxyID.HasValue)
             {
@@ -62,7 +62,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.CommandType = CommandType.StoredProcedure;
                 DBCmd.Parameters.AddWithValue("@Galaxy", (int)GalaxyID);
                 DBCmd.Parameters.AddWithValue("@Sector", Sector);
-                DBCmd.Parameters.AddWithValue("@xSysPosition", xSysPosition);
+                DBCmd.Parameters.AddWithValue("@System", System);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -114,6 +114,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.PlanetType = sqlReader.GetInt32Nullable("PlanetType");
                     planet.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
                     planet.Sector = sqlReader.GetStringNullable("Sector");
+                    planet.System = sqlReader.GetInt32Nullable("System");
                     planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
                     planet.Moon = sqlReader.GetBooleanNullable("Moon");
                     planet.Owner = sqlReader.GetInt32Nullable("Owner");
@@ -138,6 +139,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.ptMining = sqlReader.GetDecimalNullable("ptMining");
                     planet.ptResearch = sqlReader.GetDecimalNullable("ptResearch");
                     planet.TypeName = sqlReader.GetStringNullable("TypeName");
+                    planet.LastHarvest = sqlReader.GetDateTimeNullable("LastHarvest");
                 }
                 return planet;
             }
@@ -219,6 +221,40 @@ namespace StarshipfleetsAPI.DAL
 
             PlanetDetail getPlanet = GetPlanet(planetDetail.PlanetID, planetDetail.Owner);
             return getPlanet;
+        }
+
+        public static List<PlanetBuildings> GetBuildingTypes()
+        {
+            List<PlanetBuildings> BuildingsObjs = new List<PlanetBuildings>();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetBuildingTypes", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (sqlReader.Read())
+                {
+                    PlanetBuildings bld = new PlanetBuildings();
+                    bld.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
+                    bld.Name = sqlReader.GetStringNullable("Name");
+                    bld.PopulationMax = sqlReader.GetDecimalNullable("PopulationMax");
+                    bld.PopulationCost = sqlReader.GetDecimalNullable("PopulationCost");
+                    bld.Energy = sqlReader.GetDecimalNullable("Energy");
+                    bld.EnergyCost = sqlReader.GetDecimalNullable("EnergyCost");
+                    bld.Food = sqlReader.GetDecimalNullable("Food");
+                    bld.Research = sqlReader.GetDecimalNullable("Research");
+                    bld.Mining = sqlReader.GetDecimalNullable("Mining");
+                    bld.Infrastructure = sqlReader.GetDecimalNullable("Infrastructure");
+                    bld.MaterialCost = sqlReader.GetDecimalNullable("MaterialCost");
+                    bld.ProductionCost = sqlReader.GetDecimalNullable("ProductionCost");
+                    BuildingsObjs.Add(bld);
+                }
+                return BuildingsObjs;
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? PlanetType { get; set; }
         public int? Galaxy { get; set; }
         public string Sector { get; set; }
+        public int? System { get; set; }
         public int? XSysPosition { get; set; }
         public bool? Moon { get; set; }
         public int? Owner { get; set; }
@@ -36,6 +37,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public decimal? ptMining { get; set; }
         public decimal? ptResearch { get; set; }
         public string TypeName { get; set; }
+        public DateTime? LastHarvest { get; set; }
 
     }
 }

@@ -60,14 +60,14 @@ namespace StarshipfleetsAPI.Controllers
         }
 
 
-        [Route("GetSystem/{GalaxyID}/{SectorID}/{xSysPosition}")]
+        [Route("GetSystem/{GalaxyID}/{SectorID}/{System}")]
         [HttpGet]
         [ResponseType(typeof(PlanetTypeDetail))]
-        public IHttpActionResult GetSystem(int GalaxyID, string SectorID, int xSysPosition)
+        public IHttpActionResult GetSystem(int GalaxyID, string SectorID, int System)
         {
             try
             {
-                return Ok(PlanetDAL.GetGalaxy(GalaxyID, SectorID, xSysPosition));
+                return Ok(PlanetDAL.GetGalaxy(GalaxyID, SectorID, System));
             }
             catch (Exception e)
             {
@@ -120,5 +120,21 @@ namespace StarshipfleetsAPI.Controllers
                 return InternalServerError(e);
             }
         }
+
+        [Route("GetBuildingTypes")]
+        [HttpGet]
+        [ResponseType(typeof(List<PlanetBuildings>))]
+        public IHttpActionResult GetBuildingTypes()
+        {
+            try
+            {
+                return Ok(PlanetDAL.GetBuildingTypes());
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
     }
 }

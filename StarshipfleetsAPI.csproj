@@ -107,6 +107,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\PlanetBLL.cs" />
     <Compile Include="Controllers\ListItemsController.cs" />
     <Compile Include="Controllers\PlanetController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="Models\CustomListItems.cs" />
     <Compile Include="Models\Planets\Galaxy.cs" />
+    <Compile Include="Models\Planets\PlanetBuildings.cs" />
     <Compile Include="Models\Planets\PlanetDetail.cs" />
     <Compile Include="Models\Planets\PlanetTypeDetail.cs" />
     <Compile Include="Models\User\User.cs" />
@@ -131,9 +133,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BLL\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
