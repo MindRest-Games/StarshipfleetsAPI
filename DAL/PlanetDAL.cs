@@ -33,11 +33,11 @@ namespace StarshipfleetsAPI.DAL
                     TypeDetail.TypeId = sqlReader.GetInt32Nullable("TypeID");
                     TypeDetail.TypeName = sqlReader.GetStringNullable("TypeName");
                     TypeDetail.TextureNo = sqlReader.GetInt32Nullable("TextureNo");
-                    TypeDetail.Infrastructure = sqlReader.GetDecimalNullable("Infrastructure");
-                    TypeDetail.Food = sqlReader.GetDecimalNullable("Food");
-                    TypeDetail.Mining = sqlReader.GetDecimalNullable("Mining");
-                    TypeDetail.Research = sqlReader.GetDecimalNullable("Research");
-                    TypeDetail.Energy = sqlReader.GetDecimalNullable("Energy");
+                    TypeDetail.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
+                    TypeDetail.Food = sqlReader.GetDoubleNullable("Food");
+                    TypeDetail.Mining = sqlReader.GetDoubleNullable("Mining");
+                    TypeDetail.Research = sqlReader.GetDoubleNullable("Research");
+                    TypeDetail.Energy = sqlReader.GetDoubleNullable("Energy");
                     TypeDetail.Barren = sqlReader.GetBooleanNullable("Barren");
 
                 }
@@ -118,13 +118,14 @@ namespace StarshipfleetsAPI.DAL
                     planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
                     planet.Moon = sqlReader.GetBooleanNullable("Moon");
                     planet.Owner = sqlReader.GetInt32Nullable("Owner");
-                    planet.Energy = sqlReader.GetDecimalNullable("Energy");
-                    planet.Metals = sqlReader.GetDecimalNullable("Metals");
-                    planet.Research = sqlReader.GetDecimalNullable("Research");
-                    planet.Food = sqlReader.GetDecimalNullable("Food");
-                    planet.Materials = sqlReader.GetDecimalNullable("Materials");
-                    planet.BioDomes = sqlReader.GetDecimalNullable("BioDomes");
-                    planet.Factories = sqlReader.GetDecimalNullable("Factories");
+                    planet.Energy = sqlReader.GetDoubleNullable("Energy");
+                    planet.Metals = sqlReader.GetDoubleNullable("Metals");
+                    planet.Research = sqlReader.GetDoubleNullable("Research");
+                    planet.Food = sqlReader.GetDoubleNullable("Food");
+                    planet.Materials = sqlReader.GetDoubleNullable("Materials");
+                    planet.BioDomes = sqlReader.GetDoubleNullable("BioDomes");
+                    planet.Factories = sqlReader.GetDoubleNullable("Factories");
+                    planet.ShipYards = sqlReader.GetDoubleNullable("ShipYards");
                     planet.Population = sqlReader.GetInt32Nullable("Population");
                     planet.InfrastructurePop = sqlReader.GetInt32Nullable("InfrastructurePop");
                     planet.InfrastructurePopMetal = sqlReader.GetInt32Nullable("InfrastructurePopMetal");
@@ -133,11 +134,11 @@ namespace StarshipfleetsAPI.DAL
                     planet.ResearchPop = sqlReader.GetInt32Nullable("ResearchPop");
                     planet.FoodPop = sqlReader.GetInt32Nullable("FoodPop");
                     planet.Barren = sqlReader.GetBooleanNullable("Barren");
-                    planet.ptEnergy = sqlReader.GetDecimalNullable("ptEnergy");
-                    planet.ptFood = sqlReader.GetDecimalNullable("ptFood");
-                    planet.ptInfrastructure = sqlReader.GetDecimalNullable("ptInfrastructure");
-                    planet.ptMining = sqlReader.GetDecimalNullable("ptMining");
-                    planet.ptResearch = sqlReader.GetDecimalNullable("ptResearch");
+                    planet.ptEnergy = sqlReader.GetDoubleNullable("ptEnergy");
+                    planet.ptFood = sqlReader.GetDoubleNullable("ptFood");
+                    planet.ptInfrastructure = sqlReader.GetDoubleNullable("ptInfrastructure");
+                    planet.ptMining = sqlReader.GetDoubleNullable("ptMining");
+                    planet.ptResearch = sqlReader.GetDoubleNullable("ptResearch");
                     planet.TypeName = sqlReader.GetStringNullable("TypeName");
                     planet.LastHarvest = sqlReader.GetDateTimeNullable("LastHarvest");
                 }
@@ -145,7 +146,7 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
-        public static PlanetDetail UpdatePlanetPop(PlanetDetail planetDetail)
+        public static PlanetStats UpdatePlanetPop(PlanetDetail planetDetail)
         {
             if (!planetDetail.PlanetID.HasValue)
             {
@@ -183,13 +184,8 @@ namespace StarshipfleetsAPI.DAL
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }
-            chkPlanet.InfrastructurePop = planetDetail.InfrastructurePop;
-            chkPlanet.InfrastructurePopMetal = planetDetail.InfrastructurePopMetal;
-            chkPlanet.EnergyPop = planetDetail.EnergyPop;
-            chkPlanet.MetalsPop = planetDetail.MetalsPop;
-            chkPlanet.FoodPop = planetDetail.FoodPop;
-            chkPlanet.ResearchPop = planetDetail.ResearchPop;
-            return chkPlanet;
+            PlanetStats ps = GetPlanetStats(planetDetail.PlanetID);
+            return ps;
         }
 
         public static PlanetDetail ColonizePlanet(PlanetDetail planetDetail)
@@ -241,19 +237,86 @@ namespace StarshipfleetsAPI.DAL
                     PlanetBuildings bld = new PlanetBuildings();
                     bld.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
                     bld.Name = sqlReader.GetStringNullable("Name");
-                    bld.PopulationMax = sqlReader.GetDecimalNullable("PopulationMax");
-                    bld.PopulationCost = sqlReader.GetDecimalNullable("PopulationCost");
-                    bld.Energy = sqlReader.GetDecimalNullable("Energy");
-                    bld.EnergyCost = sqlReader.GetDecimalNullable("EnergyCost");
-                    bld.Food = sqlReader.GetDecimalNullable("Food");
-                    bld.Research = sqlReader.GetDecimalNullable("Research");
-                    bld.Mining = sqlReader.GetDecimalNullable("Mining");
-                    bld.Infrastructure = sqlReader.GetDecimalNullable("Infrastructure");
-                    bld.MaterialCost = sqlReader.GetDecimalNullable("MaterialCost");
-                    bld.ProductionCost = sqlReader.GetDecimalNullable("ProductionCost");
+                    bld.PopulationMax = sqlReader.GetDoubleNullable("PopulationMax");
+                    bld.PopulationCost = sqlReader.GetDoubleNullable("PopulationCost");
+                    bld.Energy = sqlReader.GetDoubleNullable("Energy");
+                    bld.EnergyCost = sqlReader.GetDoubleNullable("EnergyCost");
+                    bld.Food = sqlReader.GetDoubleNullable("Food");
+                    bld.Research = sqlReader.GetDoubleNullable("Research");
+                    bld.Mining = sqlReader.GetDoubleNullable("Mining");
+                    bld.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
+                    bld.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
+                    bld.ProductionCost = sqlReader.GetDoubleNullable("ProductionCost");
                     BuildingsObjs.Add(bld);
                 }
                 return BuildingsObjs;
+            }
+        }
+
+        public static List<BuildingQue> GetBuildingQueue(int? PlanetID)
+        {
+            if (!PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            List<BuildingQue> GetBuildingQueue = new List<BuildingQue>();
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetBuildingQueue", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+
+                while (sqlReader.Read())
+                {
+                    BuildingQue bld = new BuildingQue();
+                    bld.BuildQueID = sqlReader.GetInt32Nullable("BuildQueID");
+                    bld.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
+                    bld.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                    bld.UserID = sqlReader.GetInt32Nullable("UserID");
+                    bld.CompletetionDate = sqlReader.GetDateTimeNullable("CompletetionDate");
+                    bld.DateQued = sqlReader.GetDateTimeNullable("DateQued");
+                    GetBuildingQueue.Add(bld);
+                }
+                return GetBuildingQueue;
+            }
+        }
+
+        public static PlanetStats GetPlanetStats(int? PlanetID)
+        {
+            if (!PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            PlanetStats PlanetStats = new PlanetStats();
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetPlanetStats", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+
+                if (sqlReader.Read())
+                {
+                    PlanetStats.Energy = sqlReader.GetDoubleNullable("Energy");
+                    PlanetStats.EnergyCost = sqlReader.GetDoubleNullable("EnergyCost");
+                    PlanetStats.Food = sqlReader.GetDoubleNullable("Food");
+                    PlanetStats.Mining = sqlReader.GetDoubleNullable("Mining");
+                    PlanetStats.Research = sqlReader.GetDoubleNullable("Research");
+                    PlanetStats.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
+                    PlanetStats.PopulationMax = sqlReader.GetDoubleNullable("PopulationMax");
+                }
+                return PlanetStats;
             }
         }
     }

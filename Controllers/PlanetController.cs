@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using StarshipfleetsAPI.BLL;
 using StarshipfleetsAPI.DAL;
 using StarshipfleetsAPI.Models.Planets;
 
@@ -93,7 +94,7 @@ namespace StarshipfleetsAPI.Controllers
 
         [Route("UpdatePlanetPop")]
         [HttpPost]
-        [ResponseType(typeof(PlanetDetail))]
+        [ResponseType(typeof(PlanetStats))]
         public IHttpActionResult UpdatePlanetPop([FromBody]PlanetDetail planetDetail)
         {
             try
@@ -136,5 +137,34 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
+        [Route("BuildingQueue/{BuildingID}/{PlanetID}/{UserID}")]
+        [HttpGet]
+        [ResponseType(typeof(BuildingQue))]
+        public IHttpActionResult BuildingQueue(int BuildingID, int PlanetID, int UserID)
+        {
+            try
+            {
+                return Ok(PlanetBLL.BuildingQueue(BuildingID, PlanetID, UserID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("GetPlanetStats/{PlanetID}")]
+        [HttpGet]
+        [ResponseType(typeof(BuildingQue))]
+        public IHttpActionResult BuildingQueue(int PlanetID)
+        {
+            try
+            {
+                return Ok(PlanetDAL.GetPlanetStats(PlanetID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
     }
 }

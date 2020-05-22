@@ -10,11 +10,11 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? TypeId { get; set; }
         public string TypeName { get; set; }
         public int? TextureNo { get; set; }
-        public decimal? Infrastructure { get; set; }
-        public decimal? Food { get; set; }
-        public decimal? Mining { get; set; }
-        public decimal? Research { get; set; }
-        public decimal? Energy { get; set; }
+        public double? Infrastructure { get; set; }
+        public double? Food { get; set; }
+        public double? Mining { get; set; }
+        public double? Research { get; set; }
+        public double? Energy { get; set; }
         public bool? Barren { get; set; }
     }
 }

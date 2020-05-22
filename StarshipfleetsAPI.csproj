@@ -115,9 +115,11 @@
     <Compile Include="DAL\PlanetDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="Models\CustomListItems.cs" />
+    <Compile Include="Models\Planets\BuildingQue.cs" />
     <Compile Include="Models\Planets\Galaxy.cs" />
     <Compile Include="Models\Planets\PlanetBuildings.cs" />
     <Compile Include="Models\Planets\PlanetDetail.cs" />
+    <Compile Include="Models\Planets\PlanetStats.cs" />
     <Compile Include="Models\Planets\PlanetTypeDetail.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

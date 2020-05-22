@@ -215,6 +215,34 @@ namespace StarshipfleetsAPI.DAL
         }
 
         /// <summary>
+        /// Overload of SqlDataReader.GetDecimal() that accepts a column name instead of a column index.
+        /// </summary>
+        /// <param name="dataReader">SqlDataReader object that is being operated on.</param>
+        /// <param name="columnName">Name of the column you want to retrieve the value for.</param>
+        /// <returns></returns>
+        public static double GetDouble(this SqlDataReader dataReader, string columnName)
+        {
+            var columnIndex = dataReader.GetOrdinal(columnName);
+            return dataReader.GetDouble(columnIndex);
+        }
+
+        /// <summary>
+        /// Overload of SqlDataReader.GetDecimal() that accepts a column name instead of a column index. Allows nulls.
+        /// </summary>
+        /// <param name="dataReader">SqlDataReader object that is being operated on.</param>
+        /// <param name="columnName">Name of the column you want to retrieve the value for.</param>
+        /// <returns></returns>
+        public static double? GetDoubleNullable(this SqlDataReader dataReader, string columnName)
+        {
+            var columnIndex = dataReader.GetOrdinal(columnName);
+            if (dataReader.IsDBNull(columnIndex))
+            {
+                return null;
+            }
+            return dataReader.GetDouble(columnIndex);
+        }
+
+        /// <summary>
         /// Overload of SqlDataReader.GetString() that accepts a column name instead of a column index.
         /// </summary>
         /// <param name="dataReader">SqlDataReader object that is being operated on.</param>
