@@ -122,14 +122,14 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
-        [Route("GetBuildingTypes")]
+        [Route("GetBuildingTypes/{PlanetID}")]
         [HttpGet]
         [ResponseType(typeof(List<PlanetBuildings>))]
-        public IHttpActionResult GetBuildingTypes()
+        public IHttpActionResult GetBuildingTypes(int PlanetID)
         {
             try
             {
-                return Ok(PlanetDAL.GetBuildingTypes());
+                return Ok(PlanetDAL.GetBuildingTypes(PlanetID));
             }
             catch (Exception e)
             {
@@ -137,14 +137,29 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
-        [Route("BuildingQueue/{BuildingID}/{PlanetID}/{UserID}")]
-        [HttpGet]
-        [ResponseType(typeof(BuildingQue))]
-        public IHttpActionResult BuildingQueue(int BuildingID, int PlanetID, int UserID)
+        [Route("AddBuildingQueue")]
+        [HttpPost]
+        [ResponseType(typeof(PlanetDetail))]
+        public IHttpActionResult AddBuildingQueue([FromBody]BuildingQue buildingQue)
         {
             try
             {
-                return Ok(PlanetBLL.BuildingQueue(BuildingID, PlanetID, UserID));
+                return Ok(PlanetBLL.AddBuildingQueue(buildingQue));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("GetBuildingQueue/{PlanetID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<BuildingQue>))]
+        public IHttpActionResult GetBuildingQueue(int PlanetID)
+        {
+            try
+            {
+                return Ok(PlanetBLL.GetBuildingQueue(PlanetID));
             }
             catch (Exception e)
             {

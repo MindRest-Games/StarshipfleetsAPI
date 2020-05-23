@@ -219,7 +219,7 @@ namespace StarshipfleetsAPI.DAL
             return getPlanet;
         }
 
-        public static List<PlanetBuildings> GetBuildingTypes()
+        public static List<PlanetBuildings> GetBuildingTypes(int? PlanetID)
         {
             List<PlanetBuildings> BuildingsObjs = new List<PlanetBuildings>();
 
@@ -227,8 +227,8 @@ namespace StarshipfleetsAPI.DAL
             using (SqlCommand DBCmd = new SqlCommand("dbo.GetBuildingTypes", sqlConn))
             {
                 SqlDataReader sqlReader = default(SqlDataReader);
-
                 DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -247,6 +247,8 @@ namespace StarshipfleetsAPI.DAL
                     bld.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
                     bld.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
                     bld.ProductionCost = sqlReader.GetDoubleNullable("ProductionCost");
+                    bld.BldLevel = sqlReader.GetInt32Nullable("BldLevel");
+                    bld.QuedLevel = sqlReader.GetInt32Nullable("QuedLevel");
                     BuildingsObjs.Add(bld);
                 }
                 return BuildingsObjs;
@@ -279,6 +281,7 @@ namespace StarshipfleetsAPI.DAL
                     bld.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
                     bld.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
                     bld.UserID = sqlReader.GetInt32Nullable("UserID");
+                    bld.Seconds = sqlReader.GetDoubleNullable("Seconds");
                     bld.CompletetionDate = sqlReader.GetDateTimeNullable("CompletetionDate");
                     bld.DateQued = sqlReader.GetDateTimeNullable("DateQued");
                     GetBuildingQueue.Add(bld);
@@ -317,6 +320,88 @@ namespace StarshipfleetsAPI.DAL
                     PlanetStats.PopulationMax = sqlReader.GetDoubleNullable("PopulationMax");
                 }
                 return PlanetStats;
+            }
+        }
+
+        public static void AddBuildingQue(BuildingQue buildingQue)
+        {
+            if (!buildingQue.PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.AddBuildingQue", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@BuildingID", (int)buildingQue.BuildingID);
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)buildingQue.PlanetID);
+                DBCmd.Parameters.AddWithValue("@UserID", (int)buildingQue.UserID);
+                DBCmd.Parameters.AddWithValue("@Seconds", (int)buildingQue.Seconds);
+                DBCmd.Parameters.AddWithValue("@CompletetionDate", (DateTime)buildingQue.CompletetionDate);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+        public static void RemoveBuildingQueue(int? BuildQueID)
+        {
+            if (!BuildQueID.HasValue)
+            {
+                throw new ArgumentNullException("BuildQueID", $"BuildQueID cannot be null.");
+            }
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.RemoveBuildingQueue", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@BuildQueID", (int)BuildQueID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static void UpdatePopAndMats(int? PlanetID, double? Materials, int? Population)
+        {
+            if (!PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.UpdatePopAndMats", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@Materials", (double)Materials);
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                DBCmd.Parameters.AddWithValue("@Population", (int)Population);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static void InsertUpdatePlanetBuilding (int? PlanetID, int? BuildingID)
+        {
+            if (!PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.AddPlanetBuilding", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                DBCmd.Parameters.AddWithValue("@BuildingID", (int)BuildingID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }
         }
     }

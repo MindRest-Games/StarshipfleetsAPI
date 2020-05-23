@@ -2,6 +2,7 @@
 using StarshipfleetsAPI.Models.Planets;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.SessionState;
@@ -11,45 +12,67 @@ namespace StarshipfleetsAPI.BLL
 {
     public class PlanetBLL
     {
-        public static BuildingQue BuildingQueue(int? BuildingID, int? PlanetID, int? UserID)
+
+        public static List<BuildingQue> GetBuildingQueue(int? PlanetID)
         {
-            PlanetDetail planet = PlanetDAL.GetPlanet(PlanetID, UserID);
             List<BuildingQue> buildingQues = PlanetDAL.GetBuildingQueue(PlanetID);
-            List<PlanetBuildings> buildings = PlanetDAL.GetBuildingTypes();
-            PlanetBuildings building = buildings.Find(x => x.BuildingID == BuildingID);
+            DateTime UTC = DateTime.UtcNow;
+            List<BuildingQue> BuildingsQueLeft = new List<BuildingQue>();
+            foreach (BuildingQue item in buildingQues)
+            {
+                if (item.CompletetionDate < UTC)
+                {
+                    PlanetDAL.InsertUpdatePlanetBuilding(item.PlanetID, item.BuildingID);
+                    PlanetDAL.RemoveBuildingQueue(item.BuildQueID);
+                }
+                else
+                {
+                    BuildingsQueLeft.Add(item);
+                }
+            }
+            return BuildingsQueLeft;
+        }
 
-            double? mineYD = buildings.Find(x => x.Name == "Mine").Mining;
-            double? farmYD = buildings.Find(x => x.Name == "Farm").Food;
-            double? factoryYD = buildings.Find(x => x.Name == "Factory").Infrastructure;
-            double? plantYD = buildings.Find(x => x.Name == "Power Plant").Energy;
-            double? labYD = buildings.Find(x => x.Name == "Research Lab").Research;
-            double? bioYD = buildings.Find(x => x.Name == "Biodome").Infrastructure;
-            double? shipYD = buildings.Find(x => x.Name == "Mine").Infrastructure;
+        public static PlanetDetail AddBuildingQueue(BuildingQue buildingQue)
+        {
+            List<PlanetBuildings> buildings = PlanetDAL.GetBuildingTypes(buildingQue.PlanetID);
+            PlanetBuildings pb = buildings.Find(x => x.BuildingID == buildingQue.BuildingID);            
+            PlanetDetail pl = PlanetDAL.GetPlanet(buildingQue.PlanetID, buildingQue.UserID);
+            if (pl.Materials < pb.MaterialCost || pl.Population < pb.PopulationCost)
+            {
+                throw new Exception("Not enough resources");
+            }
+            else
+            {
+                PlanetDAL.UpdatePopAndMats(buildingQue.PlanetID, pl.Materials - buildingQue.MaterialCost, pl.Population - (int)pb.PopulationCost.Value);
+                pl.Materials = pl.Materials - pb.MaterialCost;
+                pl.Population = pl.Population - (int)pb.PopulationCost.Value;
+            }
 
-            //const mineYD = BuildingStats.filter(x => x.name == "Mine")[0].mining;
-            //const farmYD = BuildingStats.filter(x => x.name == "Farm")[0].food;
-            //const factoryYD = BuildingStats.filter(x => x.name == "Factory")[0].infrastructure;
-            //const plantYD = BuildingStats.filter(x => x.name == "Power Plant")[0].energy;
-            //const labYD = BuildingStats.filter(x => x.name == "Research Lab")[0].research;
-            //const bioYD = BuildingStats.filter(x => x.name == "Biodome")[0].infrastructure;
-
-            //const infraYD = ((planet.food * planet.ptInfrastructure * bioYD) + (planet.factories * planet.ptInfrastructure * factoryYD))
-            //    * ((PlanetPop.infrastructurePop / 100))
-
-
-            double seconds = Math.Round(((building.ProductionCost.Value + (GetBuildingLevel(BuildingID, planet) * 2.5))));
-
-            //Math.round(((building.productionCost+(getLevel(building.name)*2.5*building.productionCost))/PlanetStats.Infrastructure)*10)
-
-
+            List<BuildingQue> BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID);
+            DateTime UTC = DateTime.UtcNow;
 
             BuildingQue bq = new BuildingQue();
+            bq.BuildingID = buildingQue.BuildingID;
+            bq.PlanetID = buildingQue.PlanetID;
+            bq.Seconds = buildingQue.Seconds;
+            bq.UserID = buildingQue.UserID;
+
+            DateTime? maxCompletetionDate = BuildingsQueLeft.Max(x => x.CompletetionDate);
+            if (maxCompletetionDate.HasValue)
+            {                
+                bq.CompletetionDate = maxCompletetionDate.Value.AddSeconds(buildingQue.Seconds.Value);
+            }
+            else
+            {
+                bq.CompletetionDate = UTC.AddSeconds(buildingQue.Seconds.Value);
+            }
+            PlanetDAL.AddBuildingQue(bq);
 
 
 
 
-
-            return bq;
+            return pl;
         }
 
         public static double GetBuildingLevel(int? BuildingID, PlanetDetail planet)

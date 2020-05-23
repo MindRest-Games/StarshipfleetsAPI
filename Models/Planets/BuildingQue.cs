@@ -11,6 +11,8 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? BuildingID { get; set; }
         public int? PlanetID { get; set; }
         public int? UserID { get; set; }
+        public double? Seconds { get; set; }
+        public double? MaterialCost { get; set; }
         public DateTime? CompletetionDate { get; set; }
         public DateTime? DateQued { get; set; }
         public string BuildingName { get; set; }

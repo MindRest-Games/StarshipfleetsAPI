@@ -19,6 +19,8 @@ namespace StarshipfleetsAPI.Models.Planets
         public double? Infrastructure { get; set; }
         public double? MaterialCost { get; set; }
         public double? ProductionCost { get; set; }
+        public int? BldLevel { get; set; }
+        public int? QuedLevel { get; set; }
     }
-    
+
 }
