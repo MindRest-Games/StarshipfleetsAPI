@@ -16,14 +16,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? XSysPosition { get; set; }
         public bool? Moon { get; set; }
         public int? Owner { get; set; }
-        public double? Energy { get; set; }
-        public double? Metals { get; set; }
-        public double? Research { get; set; }
-        public double? Food { get; set; }
         public double? Materials { get; set; }
-        public double? BioDomes { get; set; }
-        public double? Factories { get; set; }
-        public double? ShipYards { get; set; }
         public int? Population {get; set;}
         public int? InfrastructurePop { get; set; }
         public int? InfrastructurePopMetal { get; set; }
@@ -39,6 +32,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public double? ptResearch { get; set; }
         public string TypeName { get; set; }
         public DateTime? LastHarvest { get; set; }
+        public DateTime? LastPopChange { get; set; }
 
     }
 }

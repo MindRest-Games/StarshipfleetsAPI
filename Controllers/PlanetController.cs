@@ -107,6 +107,21 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
+        [Route("UpdatePlanetHarvest")]
+        [HttpPost]
+        [ResponseType(typeof(PlanetStats))]
+        public IHttpActionResult UpdatePlanetHarvest([FromBody]PlanetDetail planetDetail)
+        {
+            try
+            {
+                return Ok(PlanetBLL.UpdatePlanetHarvest(planetDetail));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         [Route("ColonizePlanet")]
         [HttpPost]
         [ResponseType(typeof(PlanetDetail))]
@@ -154,7 +169,7 @@ namespace StarshipfleetsAPI.Controllers
 
         [Route("GetBuildingQueue/{PlanetID}")]
         [HttpGet]
-        [ResponseType(typeof(List<BuildingQue>))]
+        [ResponseType(typeof(AllbuildQues))]
         public IHttpActionResult GetBuildingQueue(int PlanetID)
         {
             try

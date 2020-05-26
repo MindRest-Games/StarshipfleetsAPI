@@ -117,15 +117,8 @@ namespace StarshipfleetsAPI.DAL
                     planet.System = sqlReader.GetInt32Nullable("System");
                     planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
                     planet.Moon = sqlReader.GetBooleanNullable("Moon");
-                    planet.Owner = sqlReader.GetInt32Nullable("Owner");
-                    planet.Energy = sqlReader.GetDoubleNullable("Energy");
-                    planet.Metals = sqlReader.GetDoubleNullable("Metals");
-                    planet.Research = sqlReader.GetDoubleNullable("Research");
-                    planet.Food = sqlReader.GetDoubleNullable("Food");
+                    planet.Owner = sqlReader.GetInt32Nullable("Owner");                    
                     planet.Materials = sqlReader.GetDoubleNullable("Materials");
-                    planet.BioDomes = sqlReader.GetDoubleNullable("BioDomes");
-                    planet.Factories = sqlReader.GetDoubleNullable("Factories");
-                    planet.ShipYards = sqlReader.GetDoubleNullable("ShipYards");
                     planet.Population = sqlReader.GetInt32Nullable("Population");
                     planet.InfrastructurePop = sqlReader.GetInt32Nullable("InfrastructurePop");
                     planet.InfrastructurePopMetal = sqlReader.GetInt32Nullable("InfrastructurePopMetal");
@@ -141,6 +134,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.ptResearch = sqlReader.GetDoubleNullable("ptResearch");
                     planet.TypeName = sqlReader.GetStringNullable("TypeName");
                     planet.LastHarvest = sqlReader.GetDateTimeNullable("LastHarvest");
+                    planet.LastPopChange = sqlReader.GetDateTimeNullable("LastPopChange");                    
                 }
                 return planet;
             }
@@ -186,6 +180,38 @@ namespace StarshipfleetsAPI.DAL
             }
             PlanetStats ps = GetPlanetStats(planetDetail.PlanetID);
             return ps;
+        }
+
+        public static DateTime? UpdatePlanetHarvest(PlanetDetail planetDetail)
+        {
+            if (!planetDetail.PlanetID.HasValue)
+            {
+                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+            }
+            if (!planetDetail.Materials.HasValue)
+            {
+                throw new ArgumentNullException("Materials", $"UserID cannot be null.");
+            }
+
+            DateTime? NewHarvest = DateTime.UtcNow.AddHours(1);
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.UpdatePlanetHarvest", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@PlanetID", (int)planetDetail.PlanetID);
+                DBCmd.Parameters.AddWithValue("@Materials", (double)planetDetail.Materials);
+                DBCmd.Parameters.AddWithValue("@Population", (int)planetDetail.Population);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                if (sqlReader.Read())
+                {
+                    NewHarvest = sqlReader.GetDateTimeNullable("NewHarvest");
+                }
+            }
+            return NewHarvest;
         }
 
         public static PlanetDetail ColonizePlanet(PlanetDetail planetDetail)
@@ -284,6 +310,7 @@ namespace StarshipfleetsAPI.DAL
                     bld.Seconds = sqlReader.GetDoubleNullable("Seconds");
                     bld.CompletetionDate = sqlReader.GetDateTimeNullable("CompletetionDate");
                     bld.DateQued = sqlReader.GetDateTimeNullable("DateQued");
+                    bld.BuildingName = sqlReader.GetStringNullable("BuildingName");
                     GetBuildingQueue.Add(bld);
                 }
                 return GetBuildingQueue;

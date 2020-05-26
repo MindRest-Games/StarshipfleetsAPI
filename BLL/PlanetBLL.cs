@@ -13,8 +13,9 @@ namespace StarshipfleetsAPI.BLL
     public class PlanetBLL
     {
 
-        public static List<BuildingQue> GetBuildingQueue(int? PlanetID)
+        public static AllbuildQues GetBuildingQueue(int? PlanetID)
         {
+            AllbuildQues allq = new AllbuildQues();
             List<BuildingQue> buildingQues = PlanetDAL.GetBuildingQueue(PlanetID);
             DateTime UTC = DateTime.UtcNow;
             List<BuildingQue> BuildingsQueLeft = new List<BuildingQue>();
@@ -30,7 +31,9 @@ namespace StarshipfleetsAPI.BLL
                     BuildingsQueLeft.Add(item);
                 }
             }
-            return BuildingsQueLeft;
+            allq.buildingQue = BuildingsQueLeft.OrderBy(x => x.CompletetionDate).ToList();
+
+            return allq;
         }
 
         public static PlanetDetail AddBuildingQueue(BuildingQue buildingQue)
@@ -45,11 +48,11 @@ namespace StarshipfleetsAPI.BLL
             else
             {
                 PlanetDAL.UpdatePopAndMats(buildingQue.PlanetID, pl.Materials - buildingQue.MaterialCost, pl.Population - (int)pb.PopulationCost.Value);
-                pl.Materials = pl.Materials - pb.MaterialCost;
+                pl.Materials = pl.Materials - buildingQue.MaterialCost;
                 pl.Population = pl.Population - (int)pb.PopulationCost.Value;
             }
 
-            List<BuildingQue> BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID);
+            AllbuildQues BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID);
             DateTime UTC = DateTime.UtcNow;
 
             BuildingQue bq = new BuildingQue();
@@ -58,7 +61,7 @@ namespace StarshipfleetsAPI.BLL
             bq.Seconds = buildingQue.Seconds;
             bq.UserID = buildingQue.UserID;
 
-            DateTime? maxCompletetionDate = BuildingsQueLeft.Max(x => x.CompletetionDate);
+            DateTime? maxCompletetionDate = BuildingsQueLeft.buildingQue.Max(x => x.CompletetionDate);
             if (maxCompletetionDate.HasValue)
             {                
                 bq.CompletetionDate = maxCompletetionDate.Value.AddSeconds(buildingQue.Seconds.Value);
@@ -68,31 +71,23 @@ namespace StarshipfleetsAPI.BLL
                 bq.CompletetionDate = UTC.AddSeconds(buildingQue.Seconds.Value);
             }
             PlanetDAL.AddBuildingQue(bq);
-
-
-
-
             return pl;
         }
 
-        public static double GetBuildingLevel(int? BuildingID, PlanetDetail planet)
+        public static PlanetDetail UpdatePlanetHarvest(PlanetDetail planet)
         {
-            switch (BuildingID)
+            PlanetDetail pl = PlanetDAL.GetPlanet(planet.PlanetID, planet.Owner);
+            if (pl.LastHarvest.HasValue && pl.LastHarvest.Value <= DateTime.UtcNow)
             {
-                case 1:
-                    return planet.BioDomes.Value;
-                case 2:
-                    return planet.Energy.Value;
-                case 3:
-                    return planet.Research.Value;
-                case 4:
-                    return planet.Metals.Value;
-                case 5:
-                    return planet.Food.Value;
-                case 6:
-                    return planet.Factories.Value; 
-                default: return 8;
+                pl.LastHarvest = PlanetDAL.UpdatePlanetHarvest(planet);
+                pl.Materials += planet.Materials;
+                pl.Population += planet.Population;                
             }
+            else
+            {
+                throw new Exception("Not time to harvest.");
+            }
+            return pl;
         }
     }
 }
