@@ -108,11 +108,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\PlanetBLL.cs" />
+    <Compile Include="BLL\ResearchBLL.cs" />
     <Compile Include="Controllers\ListItemsController.cs" />
     <Compile Include="Controllers\PlanetController.cs" />
+    <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DAL\DatabaseHelper.cs" />
     <Compile Include="DAL\PlanetDAL.cs" />
+    <Compile Include="DAL\ResearchDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="Models\CustomListItems.cs" />
     <Compile Include="Models\Planets\AllbuildQues.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Models\Planets\PlanetDetail.cs" />
     <Compile Include="Models\Planets\PlanetStats.cs" />
     <Compile Include="Models\Planets\PlanetTypeDetail.cs" />
+    <Compile Include="Models\Research\Technology.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

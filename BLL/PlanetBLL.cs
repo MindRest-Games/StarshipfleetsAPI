@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.SessionState;
 using System.Web.UI.WebControls;
+using System.Web.WebSockets;
 
 namespace StarshipfleetsAPI.BLL
 {
@@ -19,7 +21,9 @@ namespace StarshipfleetsAPI.BLL
             List<BuildingQue> buildingQues = PlanetDAL.GetBuildingQueue(PlanetID);
             DateTime UTC = DateTime.UtcNow;
             List<BuildingQue> BuildingsQueLeft = new List<BuildingQue>();
-            foreach (BuildingQue item in buildingQues)
+            List<BuildingQue> ResearchQueLeft = new List<BuildingQue>();
+            List<BuildingQue> ShipQueLeft = new List<BuildingQue>();
+            foreach (BuildingQue item in buildingQues.FindAll(x => x.Type == 1))
             {
                 if (item.CompletetionDate < UTC)
                 {
@@ -31,7 +35,35 @@ namespace StarshipfleetsAPI.BLL
                     BuildingsQueLeft.Add(item);
                 }
             }
+            foreach (BuildingQue item in buildingQues.FindAll(x => x.Type == 2))
+            {
+                if (item.CompletetionDate < UTC)
+                {
+                    ResearchDAL.InsertUpdatePlayerTech(item.UserID, item.BuildingID);
+                    PlanetDAL.RemoveBuildingQueue(item.BuildQueID);
+                }
+                else
+                {
+                    ResearchQueLeft.Add(item);
+                }
+            }
+            foreach (BuildingQue item in buildingQues.FindAll(x => x.Type == 3))
+            {
+                if (item.CompletetionDate < UTC)
+                {
+                    //ResearchDAL.InsertUpdatePlayerTech(item.UserID, item.BuildingID);
+                    //PlanetDAL.RemoveBuildingQueue(item.BuildQueID);
+                }
+                else
+                {
+                    //ResearchQueLeft.Add(item);
+                }
+            }
+
             allq.buildingQue = BuildingsQueLeft.OrderBy(x => x.CompletetionDate).ToList();
+            allq.researchQue = ResearchQueLeft.OrderBy(x => x.CompletetionDate).ToList(); 
+            allq.shipQue = ShipQueLeft;
+
 
             return allq;
         }
@@ -60,8 +92,9 @@ namespace StarshipfleetsAPI.BLL
             bq.PlanetID = buildingQue.PlanetID;
             bq.Seconds = buildingQue.Seconds;
             bq.UserID = buildingQue.UserID;
+            bq.Type = 1;
 
-            DateTime? maxCompletetionDate = BuildingsQueLeft.buildingQue.Max(x => x.CompletetionDate);
+            DateTime? maxCompletetionDate = BuildingsQueLeft.buildingQue.FindAll(x => x.Type==1).Max(x => x.CompletetionDate);
             if (maxCompletetionDate.HasValue)
             {                
                 bq.CompletetionDate = maxCompletetionDate.Value.AddSeconds(buildingQue.Seconds.Value);

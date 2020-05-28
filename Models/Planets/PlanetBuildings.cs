@@ -17,8 +17,12 @@ namespace StarshipfleetsAPI.Models.Planets
         public double? Research { get; set; }
         public double? Mining { get; set; }
         public double? Infrastructure { get; set; }
+        public double? Military { get; set; }
+        public int? TradeRoutes { get; set; }
         public double? MaterialCost { get; set; }
         public double? ProductionCost { get; set; }
+        public int? TechID { get; set; }
+        public int? TechLevel { get; set; }
         public int? BldLevel { get; set; }
         public int? QuedLevel { get; set; }
     }

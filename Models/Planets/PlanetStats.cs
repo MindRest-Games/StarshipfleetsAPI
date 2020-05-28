@@ -12,6 +12,8 @@ namespace StarshipfleetsAPI.Models.Planets
         public double? Food { get; set; }
         public double? Research { get; set; }
         public double? Mining { get; set; }
+        public double? Military { get; set; }
+        public int? TradeRoutes { get; set; }
         public double? Infrastructure { get; set; }
         public double? PopulationMax { get; set; }
 

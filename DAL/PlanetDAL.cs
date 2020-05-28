@@ -270,9 +270,13 @@ namespace StarshipfleetsAPI.DAL
                     bld.Food = sqlReader.GetDoubleNullable("Food");
                     bld.Research = sqlReader.GetDoubleNullable("Research");
                     bld.Mining = sqlReader.GetDoubleNullable("Mining");
-                    bld.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
+                    bld.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure"); 
+                    bld.Military = sqlReader.GetDoubleNullable("Military"); 
+                    bld.TradeRoutes = sqlReader.GetInt32Nullable("TradeRoutes");
                     bld.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
                     bld.ProductionCost = sqlReader.GetDoubleNullable("ProductionCost");
+                    bld.TechID = sqlReader.GetInt32Nullable("TechID");
+                    bld.TechLevel = sqlReader.GetInt32Nullable("TechLevel");
                     bld.BldLevel = sqlReader.GetInt32Nullable("BldLevel");
                     bld.QuedLevel = sqlReader.GetInt32Nullable("QuedLevel");
                     BuildingsObjs.Add(bld);
@@ -311,6 +315,8 @@ namespace StarshipfleetsAPI.DAL
                     bld.CompletetionDate = sqlReader.GetDateTimeNullable("CompletetionDate");
                     bld.DateQued = sqlReader.GetDateTimeNullable("DateQued");
                     bld.BuildingName = sqlReader.GetStringNullable("BuildingName");
+                    bld.TechName = sqlReader.GetStringNullable("TechName");
+                    bld.Type = sqlReader.GetInt32Nullable("Type");
                     GetBuildingQueue.Add(bld);
                 }
                 return GetBuildingQueue;
@@ -345,6 +351,8 @@ namespace StarshipfleetsAPI.DAL
                     PlanetStats.Research = sqlReader.GetDoubleNullable("Research");
                     PlanetStats.Infrastructure = sqlReader.GetDoubleNullable("Infrastructure");
                     PlanetStats.PopulationMax = sqlReader.GetDoubleNullable("PopulationMax");
+                    PlanetStats.Military = sqlReader.GetDoubleNullable("Military");
+                    PlanetStats.TradeRoutes = sqlReader.GetInt32Nullable("TradeRoutes");
                 }
                 return PlanetStats;
             }
@@ -368,6 +376,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@UserID", (int)buildingQue.UserID);
                 DBCmd.Parameters.AddWithValue("@Seconds", (int)buildingQue.Seconds);
                 DBCmd.Parameters.AddWithValue("@CompletetionDate", (DateTime)buildingQue.CompletetionDate);
+                DBCmd.Parameters.AddWithValue("@Type", (int)buildingQue.Type);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }
