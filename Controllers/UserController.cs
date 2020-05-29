@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using StarshipfleetsAPI.DAL;
+using StarshipfleetsAPI.Models.Planets;
 using StarshipfleetsAPI.Models.User;
 
 namespace StarshipfleetsAPI.Controllers
@@ -44,15 +45,19 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        [Route("GetPlanetList/{UserID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<PlanetDetail>))]
+        public IHttpActionResult GetPlanet(int UserID)
         {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            try
+            {
+                return Ok(UserDAL.GetPlanetList(UserID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
     }
 }

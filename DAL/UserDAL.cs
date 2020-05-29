@@ -65,5 +65,61 @@ namespace StarshipfleetsAPI.DAL
                 return user;
             }
         }
+
+        public static List<PlanetDetail> GetPlanetList(int? UserID)
+        {
+            if (!UserID.HasValue)
+            {
+                throw new ArgumentNullException("UserID", $"UserID cannot be null.");
+            }
+
+            List<PlanetDetail> planets = new List<PlanetDetail>();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetPlanetList", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                
+                DBCmd.Parameters.AddWithValue("@UserID", (int)UserID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (sqlReader.Read())
+                {
+                    PlanetDetail planet = new PlanetDetail();
+                    planet.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                    planet.PlanetName = sqlReader.GetStringNullable("PlanetName");
+                    planet.PlanetType = sqlReader.GetInt32Nullable("PlanetType");
+                    planet.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    planet.Sector = sqlReader.GetStringNullable("Sector");
+                    planet.System = sqlReader.GetInt32Nullable("System");
+                    planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    planet.Moon = sqlReader.GetBooleanNullable("Moon");
+                    planet.Owner = sqlReader.GetInt32Nullable("Owner");
+                    planet.Materials = sqlReader.GetDoubleNullable("Materials");
+                    planet.Population = sqlReader.GetInt32Nullable("Population");
+                    planet.Military = sqlReader.GetInt32Nullable("Military");
+                    planet.InfrastructurePop = sqlReader.GetInt32Nullable("InfrastructurePop");
+                    planet.InfrastructurePopMetal = sqlReader.GetInt32Nullable("InfrastructurePopMetal");
+                    planet.EnergyPop = sqlReader.GetInt32Nullable("EnergyPop");
+                    planet.MetalsPop = sqlReader.GetInt32Nullable("MetalsPop");
+                    planet.ResearchPop = sqlReader.GetInt32Nullable("ResearchPop");
+                    planet.FoodPop = sqlReader.GetInt32Nullable("FoodPop");
+                    planet.Barren = sqlReader.GetBooleanNullable("Barren");
+                    planet.ptEnergy = sqlReader.GetDoubleNullable("ptEnergy");
+                    planet.ptFood = sqlReader.GetDoubleNullable("ptFood");
+                    planet.ptInfrastructure = sqlReader.GetDoubleNullable("ptInfrastructure");
+                    planet.ptMining = sqlReader.GetDoubleNullable("ptMining");
+                    planet.ptResearch = sqlReader.GetDoubleNullable("ptResearch");
+                    planet.TypeName = sqlReader.GetStringNullable("TypeName");
+                    planet.LastHarvest = sqlReader.GetDateTimeNullable("LastHarvest");
+                    planet.LastPopChange = sqlReader.GetDateTimeNullable("LastPopChange");
+                    planets.Add(planet);
+                }
+                return planets;
+            }
+        }
     }
 }

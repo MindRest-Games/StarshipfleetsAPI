@@ -114,7 +114,8 @@ namespace StarshipfleetsAPI.BLL
             {
                 pl.LastHarvest = PlanetDAL.UpdatePlanetHarvest(planet);
                 pl.Materials += planet.Materials;
-                pl.Population += planet.Population;                
+                pl.Population += planet.Population;
+                pl.Military += planet.Military;
             }
             else
             {

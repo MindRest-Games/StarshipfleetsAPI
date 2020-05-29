@@ -120,6 +120,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.Owner = sqlReader.GetInt32Nullable("Owner");                    
                     planet.Materials = sqlReader.GetDoubleNullable("Materials");
                     planet.Population = sqlReader.GetInt32Nullable("Population");
+                    planet.Military = sqlReader.GetInt32Nullable("Military");
                     planet.InfrastructurePop = sqlReader.GetInt32Nullable("InfrastructurePop");
                     planet.InfrastructurePopMetal = sqlReader.GetInt32Nullable("InfrastructurePopMetal");
                     planet.EnergyPop = sqlReader.GetInt32Nullable("EnergyPop");
@@ -178,7 +179,7 @@ namespace StarshipfleetsAPI.DAL
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }
-            PlanetStats ps = GetPlanetStats(planetDetail.PlanetID);
+            PlanetStats ps = new PlanetStats();
             return ps;
         }
 
@@ -202,6 +203,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.CommandType = CommandType.StoredProcedure;
                 DBCmd.Parameters.AddWithValue("@PlanetID", (int)planetDetail.PlanetID);
                 DBCmd.Parameters.AddWithValue("@Materials", (double)planetDetail.Materials);
+                DBCmd.Parameters.AddWithValue("@Military", (double)planetDetail.Military);
                 DBCmd.Parameters.AddWithValue("@Population", (int)planetDetail.Population);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);

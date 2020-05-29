@@ -18,6 +18,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? Owner { get; set; }
         public double? Materials { get; set; }
         public int? Population {get; set;}
+        public int? Military { get; set; }
         public int? InfrastructurePop { get; set; }
         public int? InfrastructurePopMetal { get; set; }
         public int? EnergyPop { get; set; }
