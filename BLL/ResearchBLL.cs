@@ -17,7 +17,7 @@ namespace StarshipfleetsAPI.BLL
         public static PlanetDetail AddResearchQueue(BuildingQue buildingQue)
         {            
             PlanetDetail pl = PlanetDAL.GetPlanet(buildingQue.PlanetID, buildingQue.UserID);            
-            AllbuildQues BuildingsQueLeft = PlanetBLL.GetBuildingQueue(buildingQue.PlanetID);
+            AllbuildQues BuildingsQueLeft = PlanetBLL.GetBuildingQueue(buildingQue.PlanetID, buildingQue.UserID);
             DateTime UTC = DateTime.UtcNow;
 
             BuildingQue bq = new BuildingQue();

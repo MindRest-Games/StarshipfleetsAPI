@@ -12,5 +12,6 @@ namespace StarshipfleetsAPI.Models.Ships
         public string DesignName { get; set; }
         public int? HullID { get; set; }
         public string HullName { get; set; }
+        public int? ShipYardLevel { get; set; }
     }
 }

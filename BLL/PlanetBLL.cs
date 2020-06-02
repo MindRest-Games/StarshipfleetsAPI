@@ -15,10 +15,10 @@ namespace StarshipfleetsAPI.BLL
     public class PlanetBLL
     {
 
-        public static AllbuildQues GetBuildingQueue(int? PlanetID)
+        public static AllbuildQues GetBuildingQueue(int? PlanetID, int? UserID)
         {
             AllbuildQues allq = new AllbuildQues();
-            List<BuildingQue> buildingQues = PlanetDAL.GetBuildingQueue(PlanetID);
+            List<BuildingQue> buildingQues = PlanetDAL.GetBuildingQueue(UserID);
             DateTime UTC = DateTime.UtcNow;
             List<BuildingQue> BuildingsQueLeft = new List<BuildingQue>();
             List<BuildingQue> ResearchQueLeft = new List<BuildingQue>();
@@ -32,7 +32,8 @@ namespace StarshipfleetsAPI.BLL
                 }
                 else
                 {
-                    BuildingsQueLeft.Add(item);
+                    if (item.PlanetID == PlanetID)
+                        BuildingsQueLeft.Add(item);
                 }
             }
             foreach (BuildingQue item in buildingQues.FindAll(x => x.Type == 2))
@@ -44,7 +45,8 @@ namespace StarshipfleetsAPI.BLL
                 }
                 else
                 {
-                    ResearchQueLeft.Add(item);
+                    if (item.PlanetID == PlanetID)
+                        ResearchQueLeft.Add(item);
                 }
             }
             foreach (BuildingQue item in buildingQues.FindAll(x => x.Type == 3))
@@ -84,7 +86,7 @@ namespace StarshipfleetsAPI.BLL
                 pl.Population = pl.Population - (int)pb.PopulationCost.Value;
             }
 
-            AllbuildQues BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID);
+            AllbuildQues BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID, buildingQue.UserID);
             DateTime UTC = DateTime.UtcNow;
 
             BuildingQue bq = new BuildingQue();

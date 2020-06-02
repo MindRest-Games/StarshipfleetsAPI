@@ -43,6 +43,7 @@ namespace StarshipfleetsAPI.DAL
                     design.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
                     design.Plasma = sqlReader.GetDoubleNullable("Plasma");
                     design.Shields = sqlReader.GetDoubleNullable("Shields");
+                    design.Bays = sqlReader.GetDoubleNullable("Bays");
                     designs.Add(design);
                 }
                 return designs;
@@ -75,7 +76,8 @@ namespace StarshipfleetsAPI.DAL
                     design.Missile = sqlReader.GetDoubleNullable("Missile");
                     design.Movement = sqlReader.GetDoubleNullable("Movement");
                     design.Plasma = sqlReader.GetDoubleNullable("Plasma");
-                    design.Shields = sqlReader.GetDoubleNullable("Shields");                   
+                    design.Shields = sqlReader.GetDoubleNullable("Shields");
+                    design.Bays = sqlReader.GetDoubleNullable("Bays");
                 }
                 return design;
             }
@@ -120,7 +122,8 @@ namespace StarshipfleetsAPI.DAL
                     UserDesign.UserID = sqlReader.GetInt32Nullable("UserID");
                     UserDesign.DesignName = sqlReader.GetString("DesignName");
                     UserDesign.HullID = sqlReader.GetInt32Nullable("HullID");
-                    UserDesign.HullName = sqlReader.GetString("HullName");  
+                    UserDesign.HullName = sqlReader.GetString("HullName");
+                    UserDesign.ShipYardLevel = sqlReader.GetInt32Nullable("ShipYardLevel");
                     UserDesigns.Add(UserDesign);
                 }
                 return UserDesigns;
@@ -145,13 +148,17 @@ namespace StarshipfleetsAPI.DAL
                     ShipPod.ShipPodID = sqlReader.GetInt32Nullable("ShipPodID");
                     ShipPod.PodName = sqlReader.GetString("PodName");
                     ShipPod.SortOrder = sqlReader.GetInt32Nullable("SortOrder");
+                    ShipPod.Mass = sqlReader.GetInt32Nullable("Mass");
                     ShipPod.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
                     ShipPod.MilitaryCost = sqlReader.GetInt32Nullable("MilitaryCost");
                     ShipPod.Laser = sqlReader.GetDoubleNullable("Laser");
+                    ShipPod.Energy = sqlReader.GetDoubleNullable("Energy");
+                    ShipPod.EnergyCost = sqlReader.GetDoubleNullable("EnergyCost");
                     ShipPod.Missile = sqlReader.GetDoubleNullable("Missile");
                     ShipPod.Plasma = sqlReader.GetDoubleNullable("Plasma");
                     ShipPod.Shields = sqlReader.GetDoubleNullable("Shields");
-                    ShipPod.Armor = sqlReader.GetDoubleNullable("Armor");  
+                    ShipPod.Armor = sqlReader.GetDoubleNullable("Armor");
+                    ShipPod.Bays = sqlReader.GetDoubleNullable("Bays");
                     ShipPod.Movement = sqlReader.GetDoubleNullable("Movement");
                     ShipPod.TechID = sqlReader.GetInt32Nullable("TechID");
                     ShipPod.TechLevel = sqlReader.GetInt32Nullable("TechLevel");
@@ -205,6 +212,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@UserID", design.UserID);
                 DBCmd.Parameters.AddWithValue("@DesignName", design.DesignName);
                 DBCmd.Parameters.AddWithValue("@HullID", design.HullID);
+                DBCmd.Parameters.AddWithValue("@ShipYardLevel", design.ShipYardLevel);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
 

@@ -167,14 +167,14 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
-        [Route("GetBuildingQueue/{PlanetID}")]
+        [Route("GetBuildingQueue/{PlanetID}/{UserID}")]
         [HttpGet]
         [ResponseType(typeof(AllbuildQues))]
-        public IHttpActionResult GetBuildingQueue(int PlanetID)
+        public IHttpActionResult GetBuildingQueue(int PlanetID, int UserID)
         {
             try
             {
-                return Ok(PlanetBLL.GetBuildingQueue(PlanetID));
+                return Ok(PlanetBLL.GetBuildingQueue(PlanetID, UserID));
             }
             catch (Exception e)
             {

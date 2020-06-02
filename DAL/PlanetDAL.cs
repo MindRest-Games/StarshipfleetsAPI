@@ -287,11 +287,11 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
-        public static List<BuildingQue> GetBuildingQueue(int? PlanetID)
+        public static List<BuildingQue> GetBuildingQueue( int? UserID)
         {
-            if (!PlanetID.HasValue)
+            if (!UserID.HasValue)
             {
-                throw new ArgumentNullException("PlanetID", $"PlanetID cannot be null.");
+                throw new ArgumentNullException("UserID", $"UserID cannot be null.");
             }
 
             List<BuildingQue> GetBuildingQueue = new List<BuildingQue>();
@@ -301,7 +301,7 @@ namespace StarshipfleetsAPI.DAL
                 SqlDataReader sqlReader = default(SqlDataReader);
 
                 DBCmd.CommandType = CommandType.StoredProcedure;
-                DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
+                DBCmd.Parameters.AddWithValue("@UserID", (int)UserID);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
