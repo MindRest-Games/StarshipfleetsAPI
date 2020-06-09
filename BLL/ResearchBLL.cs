@@ -25,6 +25,7 @@ namespace StarshipfleetsAPI.BLL
             bq.PlanetID = buildingQue.PlanetID;
             bq.Seconds = buildingQue.Seconds;
             bq.UserID = buildingQue.UserID;
+            bq.MaterialCost = 0;
             bq.Type = 2;
 
             DateTime? maxCompletetionDate = BuildingsQueLeft.researchQue.FindAll(x => x.Type==2).Max(x => x.CompletetionDate);

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using StarshipfleetsAPI.Models.Planets;
+using StarshipfleetsAPI.BLL;
 
 namespace StarshipfleetsAPI.Controllers 
 {
@@ -89,7 +91,7 @@ namespace StarshipfleetsAPI.Controllers
 
         [Route("AddShipDesigns")]
         [HttpPost]
-        [ResponseType(typeof(List<UserDesigns>))]
+        [ResponseType(typeof(int))]
         public IHttpActionResult AddShipDesigns([FromBody]UserDesigns design)
         {
             try
@@ -110,6 +112,51 @@ namespace StarshipfleetsAPI.Controllers
             try
             {
                 return Ok(ShipDAL.AddShipDesignPods(Pods));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("AddShipQueue")]
+        [HttpPost]
+        [ResponseType(typeof(UserDesigns))]
+        public IHttpActionResult AddBuildingQueue([FromBody]BuildingQue buildingQue)
+        {
+            try
+            {
+                return Ok(ShipBLL.AddShipQueue(buildingQue));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("GetUserFleets/{UserID}")]
+        [HttpPost]
+        [ResponseType(typeof(UserDesigns))]
+        public IHttpActionResult GetUserFleets(int UserID)
+        {
+            try
+            {
+                return Ok(ShipDAL.GetUserFleets(UserID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("GetPlanetFleets/{UserID}/{PlanetID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<Fleet>))]
+        public IHttpActionResult GetPlanetFleets(int UserID, int PlanetID)
+        {
+            try
+            {
+                return Ok(ShipDAL.GetUserFleets(UserID, PlanetID));
             }
             catch (Exception e)
             {

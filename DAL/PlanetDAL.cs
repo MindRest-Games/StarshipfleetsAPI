@@ -318,6 +318,7 @@ namespace StarshipfleetsAPI.DAL
                     bld.DateQued = sqlReader.GetDateTimeNullable("DateQued");
                     bld.BuildingName = sqlReader.GetStringNullable("BuildingName");
                     bld.TechName = sqlReader.GetStringNullable("TechName");
+                    bld.ShipName = sqlReader.GetStringNullable("ShipName");
                     bld.Type = sqlReader.GetInt32Nullable("Type");
                     GetBuildingQueue.Add(bld);
                 }
@@ -377,8 +378,10 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@PlanetID", (int)buildingQue.PlanetID);
                 DBCmd.Parameters.AddWithValue("@UserID", (int)buildingQue.UserID);
                 DBCmd.Parameters.AddWithValue("@Seconds", (int)buildingQue.Seconds);
+                DBCmd.Parameters.AddWithValue("@MaterialCost", (int)buildingQue.MaterialCost);
                 DBCmd.Parameters.AddWithValue("@CompletetionDate", (DateTime)buildingQue.CompletetionDate);
                 DBCmd.Parameters.AddWithValue("@Type", (int)buildingQue.Type);
+                DBCmd.Parameters.AddWithValue("@UpgradeDesignID", buildingQue.UpgradeDesignID);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }
@@ -402,7 +405,7 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
-        public static void UpdatePopAndMats(int? PlanetID, double? Materials, int? Population)
+        public static void UpdatePopAndMats(int? PlanetID, double? Materials, int? Population, int? Military)
         {
             if (!PlanetID.HasValue)
             {
@@ -418,6 +421,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@Materials", (double)Materials);
                 DBCmd.Parameters.AddWithValue("@PlanetID", (int)PlanetID);
                 DBCmd.Parameters.AddWithValue("@Population", (int)Population);
+                DBCmd.Parameters.AddWithValue("@Military", (int)Military);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }

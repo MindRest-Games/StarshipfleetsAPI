@@ -53,19 +53,19 @@ namespace StarshipfleetsAPI.BLL
             {
                 if (item.CompletetionDate < UTC)
                 {
-                    //ResearchDAL.InsertUpdatePlayerTech(item.UserID, item.BuildingID);
-                    //PlanetDAL.RemoveBuildingQueue(item.BuildQueID);
+                    ShipBLL.InsertUpdatePlayerShip(item);
+                    PlanetDAL.RemoveBuildingQueue(item.BuildQueID);
                 }
                 else
                 {
-                    //ResearchQueLeft.Add(item);
+                    if (item.PlanetID == PlanetID)
+                        ShipQueLeft.Add(item);
                 }
             }
 
             allq.buildingQue = BuildingsQueLeft.OrderBy(x => x.CompletetionDate).ToList();
             allq.researchQue = ResearchQueLeft.OrderBy(x => x.CompletetionDate).ToList(); 
-            allq.shipQue = ShipQueLeft;
-
+            allq.shipQue = ShipQueLeft.OrderBy(x => x.CompletetionDate).ToList(); 
 
             return allq;
         }
@@ -75,15 +75,15 @@ namespace StarshipfleetsAPI.BLL
             List<PlanetBuildings> buildings = PlanetDAL.GetBuildingTypes(buildingQue.PlanetID);
             PlanetBuildings pb = buildings.Find(x => x.BuildingID == buildingQue.BuildingID);            
             PlanetDetail pl = PlanetDAL.GetPlanet(buildingQue.PlanetID, buildingQue.UserID);
-            if (pl.Materials < pb.MaterialCost || pl.Population < pb.PopulationCost)
+            if (pl.Materials < buildingQue.MaterialCost || pl.Population < pb.PopulationCost)
             {
                 throw new Exception("Not enough resources");
             }
             else
             {
-                PlanetDAL.UpdatePopAndMats(buildingQue.PlanetID, pl.Materials - buildingQue.MaterialCost, pl.Population - (int)pb.PopulationCost.Value);
-                pl.Materials = pl.Materials - buildingQue.MaterialCost;
-                pl.Population = pl.Population - (int)pb.PopulationCost.Value;
+                PlanetDAL.UpdatePopAndMats(buildingQue.PlanetID, pl.Materials - buildingQue.MaterialCost, pl.Population - (int)pb.PopulationCost.Value, pl.Military);
+                pl.Materials -= buildingQue.MaterialCost;
+                pl.Population -= (int)pb.PopulationCost.Value;
             }
 
             AllbuildQues BuildingsQueLeft = GetBuildingQueue(buildingQue.PlanetID, buildingQue.UserID);
@@ -94,6 +94,7 @@ namespace StarshipfleetsAPI.BLL
             bq.PlanetID = buildingQue.PlanetID;
             bq.Seconds = buildingQue.Seconds;
             bq.UserID = buildingQue.UserID;
+            bq.MaterialCost = buildingQue.MaterialCost;
             bq.Type = 1;
 
             DateTime? maxCompletetionDate = BuildingsQueLeft.buildingQue.FindAll(x => x.Type==1).Max(x => x.CompletetionDate);

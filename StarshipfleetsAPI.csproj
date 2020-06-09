@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="BLL\PlanetBLL.cs" />
     <Compile Include="BLL\ResearchBLL.cs" />
+    <Compile Include="BLL\ShipBLL.cs" />
     <Compile Include="Controllers\ListItemsController.cs" />
     <Compile Include="Controllers\PlanetController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
@@ -129,6 +130,8 @@
     <Compile Include="Models\Planets\PlanetTypeDetail.cs" />
     <Compile Include="Models\Research\Technology.cs" />
     <Compile Include="Models\Ships\AddShipPods.cs" />
+    <Compile Include="Models\Ships\Fleet.cs" />
+    <Compile Include="Models\Ships\FleetShips.cs" />
     <Compile Include="Models\Ships\ShipDesignDetails.cs" />
     <Compile Include="Models\Ships\ShipHulls.cs" />
     <Compile Include="Models\Ships\ShipPods.cs" />

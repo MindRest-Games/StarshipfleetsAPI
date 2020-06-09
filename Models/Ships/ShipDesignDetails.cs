@@ -11,21 +11,21 @@ namespace StarshipfleetsAPI.Models.Ships
         public string DesignName { get; set; }
         public string HullName { get; set; }
         public double? Hull { get; set; }
-        public int? NumofPods { get; set; }
-        public int? ShipPodID { get; set; }
-        public string PodName { get; set; }
-        public double? Armor { get; set; }
+        public int? ShipYardLevel { get; set; }
+        public double? MaterialCost { get; set; }
+        public int? MilitaryCost { get; set; }
         public double? Energy { get; set; }
         public double? EnergyCost { get; set; }
-        public int? MilitaryCost { get; set; }
         public double? Laser { get; set; }
-        public double? MaterialCost { get; set; }
         public double? Missile { get; set; }
-        public double? Movement { get; set; }
         public double? Plasma { get; set; }
         public double? Shields { get; set; }
+        public double? Armor { get; set; }  
         public double? Bays { get; set; }
-
+        public double? Movement { get; set; }
+        public string PodName { get; set; }
+        public int? NumofPods { get; set; }
+        public int? ShipPodID { get; set; }
 
     }
 }
