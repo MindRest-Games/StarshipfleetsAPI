@@ -91,7 +91,7 @@ namespace StarshipfleetsAPI.Controllers
 
         [Route("AddShipDesigns")]
         [HttpPost]
-        [ResponseType(typeof(int))]
+        [ResponseType(typeof(List<UserDesigns>))]
         public IHttpActionResult AddShipDesigns([FromBody]UserDesigns design)
         {
             try
@@ -122,7 +122,7 @@ namespace StarshipfleetsAPI.Controllers
         [Route("AddShipQueue")]
         [HttpPost]
         [ResponseType(typeof(UserDesigns))]
-        public IHttpActionResult AddBuildingQueue([FromBody]BuildingQue buildingQue)
+        public IHttpActionResult AddShipQueue([FromBody]BuildingQue buildingQue)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace StarshipfleetsAPI.Controllers
         }
 
         [Route("GetUserFleets/{UserID}")]
-        [HttpPost]
+        [HttpGet]
         [ResponseType(typeof(UserDesigns))]
         public IHttpActionResult GetUserFleets(int UserID)
         {
@@ -163,5 +163,36 @@ namespace StarshipfleetsAPI.Controllers
                 return InternalServerError(e);
             }
         }
+
+        [Route("MoveFleet/{UserID}/{FleetID}/{PlanetID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<Fleet>))]
+        public IHttpActionResult MoveFleet(int UserID, int FleetID, int PlanetID)
+        {
+            try
+            {
+                return Ok(ShipBLL.MoveFleet(UserID, FleetID, PlanetID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+
+        [Route("FleetMoveComplete/{UserID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<Fleet>))]
+        public IHttpActionResult FleetMoveComplete(int UserID)
+        {
+            try
+            {
+                return Ok(ShipBLL.FleetMoveComplete(UserID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }        
     }
 }

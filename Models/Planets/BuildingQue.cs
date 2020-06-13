@@ -16,7 +16,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public DateTime? CompletetionDate { get; set; }
         public DateTime? DateQued { get; set; }
         public int? Type { get; set; }
-        public int? UpgradeDesignID { get; set; }
+        public double? Movement { get; set; }
         public string BuildingName { get; set; }
         public string TechName { get; set; }
         public string ShipName { get; set; }

@@ -14,5 +14,7 @@ namespace StarshipfleetsAPI.Models.User
         public DateTime? PremiumExpires { get; set; }
         public DateTime? LastLogin { get; set; }
         public string IPAddress { get; set; }
+        public DateTime? Joined { get; set; }
+        public bool? Banned { get; set; }
     }
 }

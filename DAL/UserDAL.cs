@@ -33,6 +33,8 @@ namespace StarshipfleetsAPI.DAL
                     user.PremiumExpires = sqlReader.GetDateTimeNullable("PremiumExpires");
                     user.LastLogin = sqlReader.GetDateTimeNullable("LastLogin");
                     user.IPAddress = sqlReader.GetStringNullable("IPAddress");
+                    user.Joined = sqlReader.GetDateTimeNullable("Joined");
+                    user.Banned = sqlReader.GetBooleanNullable("Banned");
                 }
                 return user;
             }
@@ -61,9 +63,40 @@ namespace StarshipfleetsAPI.DAL
                     user.PremiumExpires = sqlReader.GetDateTimeNullable("PremiumExpires");
                     user.LastLogin = sqlReader.GetDateTimeNullable("LastLogin");
                     user.IPAddress = sqlReader.GetStringNullable("IPAddress");
+                    user.Joined = sqlReader.GetDateTimeNullable("Joined");
+                    user.Banned = sqlReader.GetBooleanNullable("Banned");
                 }
                 return user;
             }
+        }
+
+        public static List<PlanetDetail> GetFirstPlanet(int? UserID)
+        {
+            if (!UserID.HasValue)
+            {
+                throw new ArgumentNullException("UserID", $"UserID cannot be null.");
+            }
+
+            int? PlanetID = 0;
+            List<PlanetDetail> planets = new List<PlanetDetail>();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetFirstPlanet", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@UserID", (int)UserID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+
+                if (sqlReader.Read())
+                {
+                    PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                }
+            }
+            planets = UserDAL.GetPlanetList(UserID);
+            return planets;
         }
 
         public static List<PlanetDetail> GetPlanetList(int? UserID)
@@ -96,6 +129,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.Sector = sqlReader.GetStringNullable("Sector");
                     planet.System = sqlReader.GetInt32Nullable("System");
                     planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    planet.YSysPosition = sqlReader.GetInt32Nullable("YSysPosition");
                     planet.Moon = sqlReader.GetBooleanNullable("Moon");
                     planet.Owner = sqlReader.GetInt32Nullable("Owner");
                     planet.Materials = sqlReader.GetDoubleNullable("Materials");

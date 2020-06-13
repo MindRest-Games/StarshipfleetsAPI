@@ -14,5 +14,6 @@ namespace StarshipfleetsAPI.Models.Ships
         public int? ActualNumber { get; set; }
         public double? EffectiveNumber { get; set; }
         public int? UserID { get; set; }
+        public double? Movement { get; set; }
     }
 }

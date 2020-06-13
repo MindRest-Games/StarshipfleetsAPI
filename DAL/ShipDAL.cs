@@ -213,7 +213,7 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
-        public static int? AddShipDesigns(UserDesigns design)
+        public static List<UserDesigns> AddShipDesigns(UserDesigns design)
         {
             int? ShipDesignID = null;
             using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
@@ -245,7 +245,7 @@ namespace StarshipfleetsAPI.DAL
                 }
             }
             List<UserDesigns> designs = GetShipDesignbyUser(design.UserID);
-            return ShipDesignID;
+            return designs;
         }
 
         public static ShipDesignDetails AddShipDesignPods(List<AddShipPods> Pods)
@@ -275,7 +275,8 @@ namespace StarshipfleetsAPI.DAL
 
         public static List<Fleet> GetUserFleets(int? UserID, int? PlanetID = null, int? FleetID = null)
         {
-            List<Fleet> Fleets = new List<Fleet>();
+            FleetMoveComplete();
+            List<Fleet> Fleets = new List<Fleet>();            
 
             using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
             using (SqlCommand DBCmd = new SqlCommand("dbo.GetFleetsbyUser", sqlConn))
@@ -296,11 +297,14 @@ namespace StarshipfleetsAPI.DAL
                     fleet.FleetName = sqlReader.GetString("FleetName");
                     fleet.Status = sqlReader.GetInt32Nullable("Status");
                     fleet.Destination = sqlReader.GetInt32Nullable("Destination");
+                    fleet.Start = sqlReader.GetDateTimeNullable("Start");
                     fleet.Arrival = sqlReader.GetDateTimeNullable("Arrival");
                     fleet.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
                     fleet.System = sqlReader.GetInt32Nullable("System");
                     fleet.Sector = sqlReader.GetStringNullable("Sector");
                     fleet.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    fleet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    fleet.YSysPosition = sqlReader.GetInt32Nullable("YSysPosition");
                     Fleets.Add(fleet);
                 }
 
@@ -334,6 +338,7 @@ namespace StarshipfleetsAPI.DAL
                     ship.DesignName = sqlReader.GetString("DesignName");
                     ship.ActualNumber = sqlReader.GetInt32Nullable("ActualNumber");
                     ship.EffectiveNumber = sqlReader.GetDoubleNullable("EffectiveNumber");
+                    ship.Movement = sqlReader.GetDoubleNullable("Movement");
                     Ships.Add(ship);
                 }
                 return Ships;
@@ -375,6 +380,34 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@DesignID", ship.BuildingID);
                 DBCmd.Parameters.AddWithValue("@ActualNumber", 1);
                 DBCmd.Parameters.AddWithValue("@EffectiveNumber", 1);
+                DBCmd.Parameters.AddWithValue("@Movement", ship.Movement);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static void SetMoveFleet(int? UserID, int? FleetID, int? PlanetID)
+        {
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.SetMoveFleet", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@UserID", UserID);
+                DBCmd.Parameters.AddWithValue("@FleetID", FleetID);
+                DBCmd.Parameters.AddWithValue("@PlanetID", PlanetID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static void FleetMoveComplete()
+        {
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.FleetMoveComplete", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }

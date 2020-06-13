@@ -116,6 +116,7 @@ namespace StarshipfleetsAPI.DAL
                     planet.Sector = sqlReader.GetStringNullable("Sector");
                     planet.System = sqlReader.GetInt32Nullable("System");
                     planet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    planet.YSysPosition = sqlReader.GetInt32Nullable("YSysPosition");
                     planet.Moon = sqlReader.GetBooleanNullable("Moon");
                     planet.Owner = sqlReader.GetInt32Nullable("Owner");                    
                     planet.Materials = sqlReader.GetDoubleNullable("Materials");
@@ -281,6 +282,7 @@ namespace StarshipfleetsAPI.DAL
                     bld.TechLevel = sqlReader.GetInt32Nullable("TechLevel");
                     bld.BldLevel = sqlReader.GetInt32Nullable("BldLevel");
                     bld.QuedLevel = sqlReader.GetInt32Nullable("QuedLevel");
+                    bld.ShowFlag = sqlReader.GetBooleanNullable("ShowFlag");
                     BuildingsObjs.Add(bld);
                 }
                 return BuildingsObjs;
@@ -319,6 +321,7 @@ namespace StarshipfleetsAPI.DAL
                     bld.BuildingName = sqlReader.GetStringNullable("BuildingName");
                     bld.TechName = sqlReader.GetStringNullable("TechName");
                     bld.ShipName = sqlReader.GetStringNullable("ShipName");
+                    bld.Movement = sqlReader.GetDoubleNullable("Movement");
                     bld.Type = sqlReader.GetInt32Nullable("Type");
                     GetBuildingQueue.Add(bld);
                 }
@@ -381,7 +384,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@MaterialCost", (int)buildingQue.MaterialCost);
                 DBCmd.Parameters.AddWithValue("@CompletetionDate", (DateTime)buildingQue.CompletetionDate);
                 DBCmd.Parameters.AddWithValue("@Type", (int)buildingQue.Type);
-                DBCmd.Parameters.AddWithValue("@UpgradeDesignID", buildingQue.UpgradeDesignID);
+                DBCmd.Parameters.AddWithValue("@Movement", buildingQue.Movement);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
             }

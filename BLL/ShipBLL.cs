@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
 using StarshipfleetsAPI.DAL;
 using StarshipfleetsAPI.Models.Planets;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Web;
 using System.Web.SessionState;
 using System.Web.UI.WebControls;
 using System.Web.WebSockets;
@@ -45,7 +40,7 @@ namespace StarshipfleetsAPI.BLL
             bq.Seconds = buildingQue.Seconds;
             bq.UserID = buildingQue.UserID;
             bq.MaterialCost = buildingQue.MaterialCost;
-            bq.UpgradeDesignID = buildingQue.UpgradeDesignID;
+            bq.Movement = buildingQue.Movement;
             bq.Type = 3;
 
             DateTime? maxCompletetionDate = BuildingsQueLeft.shipQue.FindAll(x => x.Type == 3).Max(x => x.CompletetionDate);
@@ -63,7 +58,7 @@ namespace StarshipfleetsAPI.BLL
 
         public static List<Fleet> InsertUpdatePlayerShip(BuildingQue ship)
         {           
-            List<Fleet> fleets = ShipDAL.GetUserFleets(ship.UserID, ship.PlanetID);
+            List<Fleet> fleets = ShipDAL.GetUserFleets(ship.UserID, ship.PlanetID).FindAll(x => x.Status==0).OrderBy(x => x.Arrival).ToList();
             if (fleets.Count == 0)
             {
                 ShipDAL.AddFleet(ship);                
@@ -74,6 +69,18 @@ namespace StarshipfleetsAPI.BLL
             }
             fleets = ShipDAL.GetUserFleets(ship.UserID, ship.PlanetID);
             return fleets;
+        }
+
+        public static List<Fleet> MoveFleet(int UserID, int FleetID, int PlanetID)
+        {
+            ShipDAL.SetMoveFleet(UserID, FleetID, PlanetID);
+            return ShipDAL.GetUserFleets(UserID);
+        }
+
+        public static List<Fleet> FleetMoveComplete(int UserID)
+        {
+            ShipDAL.FleetMoveComplete();
+            return ShipDAL.GetUserFleets(UserID);
         }
     }
 

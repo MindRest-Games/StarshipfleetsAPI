@@ -25,6 +25,7 @@ namespace StarshipfleetsAPI.Models.Planets
         public int? TechLevel { get; set; }
         public int? BldLevel { get; set; }
         public int? QuedLevel { get; set; }
+        public bool? ShowFlag { get; set; }
     }
 
 }

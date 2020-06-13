@@ -59,5 +59,20 @@ namespace StarshipfleetsAPI.Controllers
                 return InternalServerError(e);
             }
         }
+
+        [Route("GetFirstPlanet/{UserID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<PlanetDetail>))]
+        public IHttpActionResult GetFirstPlanet(int UserID)
+        {
+            try
+            {
+                return Ok(UserDAL.GetFirstPlanet(UserID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
     }
 }
