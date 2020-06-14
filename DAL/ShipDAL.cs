@@ -136,6 +136,7 @@ namespace StarshipfleetsAPI.DAL
                     UserDesign.Armor = sqlReader.GetDoubleNullable("Armor");
                     UserDesign.Bays = sqlReader.GetDoubleNullable("Bays");
                     UserDesign.Movement = sqlReader.GetDoubleNullable("Movement");
+                    UserDesign.Colony = sqlReader.GetInt32Nullable("Colony");
                     UserDesigns.Add(UserDesign);
                 }
                 return UserDesigns;
@@ -172,6 +173,7 @@ namespace StarshipfleetsAPI.DAL
                     ShipPod.Armor = sqlReader.GetDoubleNullable("Armor");
                     ShipPod.Bays = sqlReader.GetDoubleNullable("Bays");
                     ShipPod.Movement = sqlReader.GetDoubleNullable("Movement");
+                    ShipPod.Colony = sqlReader.GetInt32Nullable("Colony");
                     ShipPod.TechID = sqlReader.GetInt32Nullable("TechID");
                     ShipPod.TechLevel = sqlReader.GetInt32Nullable("TechLevel");
                     ShipPod.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
@@ -237,6 +239,7 @@ namespace StarshipfleetsAPI.DAL
                 DBCmd.Parameters.AddWithValue("@Armor", design.Armor); 
                 DBCmd.Parameters.AddWithValue("@Bays", design.Bays);
                 DBCmd.Parameters.AddWithValue("@Movement", design.Movement);
+                DBCmd.Parameters.AddWithValue("@Colony", design.Colony);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
                 if (sqlReader.Read())
@@ -339,6 +342,7 @@ namespace StarshipfleetsAPI.DAL
                     ship.ActualNumber = sqlReader.GetInt32Nullable("ActualNumber");
                     ship.EffectiveNumber = sqlReader.GetDoubleNullable("EffectiveNumber");
                     ship.Movement = sqlReader.GetDoubleNullable("Movement");
+                    ship.Colony = sqlReader.GetInt32Nullable("Colony");
                     Ships.Add(ship);
                 }
                 return Ships;

@@ -22,6 +22,7 @@ namespace StarshipfleetsAPI.Models.Ships
         public double? Armor { get; set; }
         public double? Bays { get; set; }
         public double? Movement { get; set; }
+        public int? Colony { get; set; }
         public int? TechID { get; set; }
         public int? TechLevel { get; set; }
         public int? BuildingID { get; set; }
