@@ -149,6 +149,22 @@ namespace StarshipfleetsAPI.Controllers
             }
         }
 
+
+        [Route("GetSystemFleets/{System}")]
+        [HttpGet]
+        [ResponseType(typeof(UserDesigns))]
+        public IHttpActionResult GetSystemFleets(string System)
+        {
+            try
+            {
+                return Ok(ShipDAL.GetUserFleets(null,null,null,System).FindAll(x => x.Status == 0));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         [Route("GetPlanetFleets/{UserID}/{PlanetID}")]
         [HttpGet]
         [ResponseType(typeof(List<Fleet>))]
@@ -156,7 +172,7 @@ namespace StarshipfleetsAPI.Controllers
         {
             try
             {
-                return Ok(ShipDAL.GetUserFleets(UserID, PlanetID));
+                return Ok(ShipDAL.GetPlanetFleets(UserID, PlanetID));
             }
             catch (Exception e)
             {

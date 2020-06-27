@@ -37,7 +37,7 @@ namespace StarshipfleetsAPI.Controllers
         {
             try
             {
-                return Ok(PlanetDAL.GetGalaxy(GalaxyID));
+                return Ok(PlanetDAL.GetGalaxySystems(GalaxyID));
             }
             catch (Exception e)
             {

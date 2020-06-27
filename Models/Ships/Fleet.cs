@@ -14,6 +14,7 @@ namespace StarshipfleetsAPI.Models.Ships
         public int? Destination { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? Arrival { get; set; }
+        public double? MaterialCost { get; set; }
         public int? PlanetID { get; set; }
         public int? System { get; set; }
         public string Sector { get; set; }

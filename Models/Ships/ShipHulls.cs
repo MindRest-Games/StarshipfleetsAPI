@@ -17,5 +17,6 @@ namespace StarshipfleetsAPI.Models.Ships
         public int? TechLevel { get; set; }
         public int? BuildingID { get; set; }
         public int? BuildingLevel { get; set; }
+        public bool? RequiresBay { get; set; }
     }
 }

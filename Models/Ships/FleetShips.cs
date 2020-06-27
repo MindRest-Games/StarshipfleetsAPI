@@ -16,5 +16,6 @@ namespace StarshipfleetsAPI.Models.Ships
         public int? UserID { get; set; }
         public double? Movement { get; set; }
         public int? Colony { get; set; }
+        public double? Hull { get; set; }
     }
 }

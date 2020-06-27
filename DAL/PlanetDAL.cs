@@ -45,6 +45,39 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
+        public static List<GalaxyClass> GetGalaxySystems(int? GalaxyID)
+        {
+            if (!GalaxyID.HasValue)
+            {
+                throw new ArgumentNullException("GalaxyID", $"GalaxyID cannot be null.");
+            }
+
+            List<GalaxyClass> GalaxyObj = new List<GalaxyClass>();
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetGalaxySystems", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@Galaxy", (int)GalaxyID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (sqlReader.Read())
+                {
+                    GalaxyClass gc = new GalaxyClass();
+                    gc.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    gc.Sector = sqlReader.GetStringNullable("Sector");
+                    gc.System = sqlReader.GetInt32Nullable("System");
+                    gc.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    gc.YSysPosition = sqlReader.GetInt32Nullable("YSysPosition");
+                    GalaxyObj.Add(gc);
+                }
+                return GalaxyObj;
+            }
+        }
+
         public static List<GalaxyClass> GetGalaxy(int? GalaxyID, string Sector = null, int? System = null)
         {
             if (!GalaxyID.HasValue)

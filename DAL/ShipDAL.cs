@@ -2,6 +2,7 @@
 using StarshipfleetsAPI.Models.Ships;
 using System;
 using System.Collections.Generic;
+using System.Configuration.Internal;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -209,6 +210,7 @@ namespace StarshipfleetsAPI.DAL
                     ShipHull.TechLevel = sqlReader.GetInt32Nullable("TechLevel");
                     ShipHull.BuildingID = sqlReader.GetInt32Nullable("BuildingID");
                     ShipHull.BuildingLevel = sqlReader.GetInt32Nullable("BuildingLevel");
+                    ShipHull.RequiresBay = sqlReader.GetBooleanNullable("RequiresBay");
                     ShipHulls.Add(ShipHull);
                 }
                 return ShipHulls;
@@ -276,19 +278,18 @@ namespace StarshipfleetsAPI.DAL
             return design;
         }
 
-        public static List<Fleet> GetUserFleets(int? UserID, int? PlanetID = null, int? FleetID = null)
+        public static List<Fleet> GetPlanetFleets(int? UserID, int? PlanetID)
         {
             FleetMoveComplete();
-            List<Fleet> Fleets = new List<Fleet>();            
+            List<Fleet> Fleets = new List<Fleet>();
 
             using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
-            using (SqlCommand DBCmd = new SqlCommand("dbo.GetFleetsbyUser", sqlConn))
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetPlanetFleets", sqlConn))
             {
                 SqlDataReader sqlReader = default(SqlDataReader);
                 DBCmd.CommandType = CommandType.StoredProcedure;
                 DBCmd.Parameters.AddWithValue("@UserID", UserID);
                 DBCmd.Parameters.AddWithValue("@PlanetID", PlanetID);
-                DBCmd.Parameters.AddWithValue("@FleetID", FleetID);
                 sqlConn.Open();
                 sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -302,6 +303,52 @@ namespace StarshipfleetsAPI.DAL
                     fleet.Destination = sqlReader.GetInt32Nullable("Destination");
                     fleet.Start = sqlReader.GetDateTimeNullable("Start");
                     fleet.Arrival = sqlReader.GetDateTimeNullable("Arrival");
+                    fleet.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
+                    fleet.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
+                    fleet.System = sqlReader.GetInt32Nullable("System");
+                    fleet.Sector = sqlReader.GetStringNullable("Sector");
+                    fleet.Galaxy = sqlReader.GetInt32Nullable("Galaxy");
+                    fleet.XSysPosition = sqlReader.GetInt32Nullable("XSysPosition");
+                    fleet.YSysPosition = sqlReader.GetInt32Nullable("YSysPosition");
+                    Fleets.Add(fleet);
+                }
+
+                foreach (Fleet f in Fleets)
+                {
+                    f.Ships = GetFleetShips(f.FleetID);
+                }
+                return Fleets;
+            }
+        }
+
+        public static List<Fleet> GetUserFleets(int? UserID, int? PlanetID = null, int? FleetID = null, string System = null)
+        {
+            FleetMoveComplete();
+            List<Fleet> Fleets = new List<Fleet>();            
+
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.GetFleets", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@UserID", UserID);
+                DBCmd.Parameters.AddWithValue("@PlanetID", PlanetID);
+                DBCmd.Parameters.AddWithValue("@FleetID", FleetID);
+                DBCmd.Parameters.AddWithValue("@System", System);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (sqlReader.Read())
+                {
+                    Fleet fleet = new Fleet();
+                    fleet.UserID = sqlReader.GetInt32Nullable("UserID");
+                    fleet.FleetID = sqlReader.GetInt32Nullable("FleetID");
+                    fleet.FleetName = sqlReader.GetString("FleetName");
+                    fleet.Status = sqlReader.GetInt32Nullable("Status");
+                    fleet.Destination = sqlReader.GetInt32Nullable("Destination");
+                    fleet.Start = sqlReader.GetDateTimeNullable("Start");
+                    fleet.Arrival = sqlReader.GetDateTimeNullable("Arrival");
+                    fleet.MaterialCost = sqlReader.GetDoubleNullable("MaterialCost");
                     fleet.PlanetID = sqlReader.GetInt32Nullable("PlanetID");
                     fleet.System = sqlReader.GetInt32Nullable("System");
                     fleet.Sector = sqlReader.GetStringNullable("Sector");
@@ -343,6 +390,7 @@ namespace StarshipfleetsAPI.DAL
                     ship.EffectiveNumber = sqlReader.GetDoubleNullable("EffectiveNumber");
                     ship.Movement = sqlReader.GetDoubleNullable("Movement");
                     ship.Colony = sqlReader.GetInt32Nullable("Colony");
+                    ship.Hull = sqlReader.GetDoubleNullable("Hull");
                     Ships.Add(ship);
                 }
                 return Ships;
