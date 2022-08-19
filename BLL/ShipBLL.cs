@@ -82,6 +82,16 @@ namespace StarshipfleetsAPI.BLL
             ShipDAL.FleetMoveComplete();
             return ShipDAL.GetUserFleets(UserID);
         }
+        
+        public static List<Fleet> MergeFleets(int UserID, int FleetID, int MergeID)
+        {
+            List<FleetShips> ships = ShipDAL.GetFleetShips(MergeID);
+            foreach (FleetShips ship in ships)
+            {
+                ShipDAL.UpdateFleetDetails(ship, FleetID);
+            }
+            return ShipDAL.GetUserFleets(UserID);
+        }
     }
 
 

@@ -209,6 +209,21 @@ namespace StarshipfleetsAPI.Controllers
             {
                 return InternalServerError(e);
             }
-        }        
+        }
+
+        [Route("MergeFleets/{UserID}/{FleetID}/{MergeID}")]
+        [HttpGet]
+        [ResponseType(typeof(List<Fleet>))]
+        public IHttpActionResult MergeFleets(int UserID, int FleetID, int MergeID)
+        {
+            try
+            {
+                return Ok(ShipBLL.MergeFleets(UserID, FleetID, MergeID));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
     }
 }

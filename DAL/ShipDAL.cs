@@ -88,7 +88,6 @@ namespace StarshipfleetsAPI.DAL
         public static List<UserDesigns> RemoveShipDesigns(int? UserID, int? ShipDesignID)
         {
             ShipDesignDetails design = new ShipDesignDetails();
-
             using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
             using (SqlCommand DBCmd = new SqlCommand("dbo.RemoveShipDesigns", sqlConn))
             {
@@ -101,8 +100,7 @@ namespace StarshipfleetsAPI.DAL
                 List<UserDesigns> designs = GetShipDesignbyUser(UserID);
                 return designs;
             }
-        }
-        
+        }      
 
         public static List<UserDesigns> GetShipDesignbyUser(int? UserID)
         {
@@ -438,6 +436,38 @@ namespace StarshipfleetsAPI.DAL
             }
         }
 
+        public static void UpdateFleetDetails(FleetShips ship, int? FleetID)
+        {
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.AddFleetDetails", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@UserID", ship.UserID);
+                DBCmd.Parameters.AddWithValue("@FleetID", FleetID);
+                DBCmd.Parameters.AddWithValue("@DesignID", ship.DesignID);
+                DBCmd.Parameters.AddWithValue("@ActualNumber", ship.ActualNumber);
+                DBCmd.Parameters.AddWithValue("@EffectiveNumber", ship.EffectiveNumber);
+                DBCmd.Parameters.AddWithValue("@Movement", ship.Movement);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static void RemoveFleet(int UserID, int FleetID)
+        {
+            ShipDesignDetails design = new ShipDesignDetails();
+            using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
+            using (SqlCommand DBCmd = new SqlCommand("dbo.RemoveFleet", sqlConn))
+            {
+                SqlDataReader sqlReader = default(SqlDataReader);
+                DBCmd.CommandType = CommandType.StoredProcedure;
+                DBCmd.Parameters.AddWithValue("@UserID", UserID);
+                DBCmd.Parameters.AddWithValue("@FleetID", FleetID);
+                sqlConn.Open();
+                sqlReader = DBCmd.ExecuteReader(CommandBehavior.CloseConnection);                
+            }
+        }
         public static void SetMoveFleet(int? UserID, int? FleetID, int? PlanetID)
         {
             using (SqlConnection sqlConn = DatabaseHelper.GetConnection())
